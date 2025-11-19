@@ -10,28 +10,25 @@ interface EventCard {
   description: string;
   image: string;
   date: string;
-  instructor: string;
 }
 
 const FeaturedEvent = () => {
   const events: EventCard[] = [
     {
       id: 1,
-      title: "Dari Main Game Sampe Jadi Web Developer",
+      title: "Talkshow WPUCast",
       description: "Bit Episode 1 WPUCast",
       image:
         "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop",
       date: "25 Jan 2025, 09:25 WIB",
-      instructor: "Talkshow WPUCast",
     },
     {
       id: 2,
-      title: "Fitur Search Pada React JS",
+      title: "Belajar Membuat Fitur Search React JS",
       description: "Belajar Membuat Fitur Search React JS",
       image:
         "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop",
       date: "9 Jan 2025, 09:24 WIB",
-      instructor: "Belajar Membuat Fitur Search React JS",
     },
     {
       id: 3,
@@ -41,7 +38,6 @@ const FeaturedEvent = () => {
       image:
         "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop",
       date: "15 Jan 2025, 09:22 WIB",
-      instructor: "GraphQL Fundamental",
     },
     {
       id: 4,
@@ -51,7 +47,6 @@ const FeaturedEvent = () => {
       image:
         "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=300&fit=crop",
       date: "11 Jan 2025, 09:19 WIB",
-      instructor: "Belajar Tailwind CSS Bareng Kang Agung",
     },
   ];
 
@@ -65,7 +60,7 @@ const FeaturedEvent = () => {
         </div>
         <Link
           href="/explore"
-          className="text-text-light font-semibold text-sm md:text-base hover:underline flex items-center gap-1"
+          className="text-gray-500 font-semibold text-sm md:text-base hover:underline flex items-center gap-1"
         >
           See More
           <ChevronRight size={16} />
@@ -76,32 +71,28 @@ const FeaturedEvent = () => {
         {events.map((event) => (
           <div
             key={event.id}
-            className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer group"
+            className="bg-white rounded-lg border border-[#E5E7EB] overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
           >
-            <div className="relative w-full h-48 overflow-hidden bg-gray-200">
-              <Image
-                src={event.image}
-                alt={event.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-text-dark text-sm md:text-base line-clamp-2 mb-2">
-                {event.title}
-              </h3>
+            <div className="p-4 flex flex-col h-full">
+              <div>
+                <Image
+                  src={event.image}
+                  alt={event.title}
+                  width={1920}
+                  height={1080}
+                  className="aspect-video w-full rounded-lg object-cover"
+                />
+              </div>
+              <div>
+                <h3 className="font-bold text-primary text-text-dark text-sm md:text-lg line-clamp-1 mb-2 mt-3">
+                  {event.title}
+                </h3>
 
-              <p className="text-text-light text-xs md:text-sm line-clamp-2 mb-3">
-                {event.description}
-              </p>
-
-              <p className="text-text-light text-xs mb-3">{event.date}</p>
-
-              <div className="pt-3 border-t border-gray-200">
-                <p className="text-text-light text-xs line-clamp-1">
-                  {event.instructor}
+                <p className="text-text-light text-xs md:text-sm line-clamp-2 mb-3">
+                  {event.description}
                 </p>
               </div>
+              <p className="text-text-light text-xs mt-auto">{event.date}</p>
             </div>
           </div>
         ))}

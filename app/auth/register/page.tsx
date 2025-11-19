@@ -1,11 +1,11 @@
-const RegisterPages = () => {
+import RegisterComponent from "@/components/auth/register";
+
+export default function RegisterPages() {
   return (
     <>
-      <div>
-        <h1>Halo</h1>
+      <div className="bg-background w-full flex items-center justify-center">
+        <RegisterComponent />
       </div>
     </>
   );
-};
-
-export default RegisterPages;
+}
