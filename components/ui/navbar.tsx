@@ -26,8 +26,8 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed w-full top-0 bg-white border border-b-[#E5E7EB]">
-        <div className="px-20 py-6 flex items-center justify-between">
+      <nav className="fixed w-full top-0 bg-white border border-b-[#E5E7EB] z-50">
+        <div className="md:px-20 px-4 h-16 flex items-center justify-between">
           <div className="text-primary">
             <h2 className="font-heading text-2xl font-bold leading-tight tracking-tighter">
               Eventify
@@ -37,7 +37,7 @@ const Navbar = () => {
             {navItems.slice(0, 4).map((nav, index) => (
               <motion.div key={index} className="relative group">
                 <Link
-                  className="leading-normal text-text-dark hover:text-primary text-lg font-medium transition-colors duration-200 py-2 px-1 relative"
+                  className="leading-normal text-text-dark hover:text-primary text-md font-medium transition-colors duration-200 py-2 px-1 relative"
                   href={nav.href}
                 >
                   {nav.title}

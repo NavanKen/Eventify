@@ -58,12 +58,13 @@ const Hero = () => {
         <CarouselContent>
           {banners.map((banner) => (
             <CarouselItem key={banner.id}>
-              <div className="relative w-full h-64 md:h-80 rounded-3xl overflow-hidden">
+              <div className="relative w-full rounded-2xl overflow-hidden">
                 <Image
                   src={banner.image}
                   alt="Banner"
-                  fill
-                  className="object-cover"
+                  width={1920}
+                  height={1080}
+                  className="object-cover rounded-2xl h-[80%] lg:h-[90%]"
                   priority
                 />
               </div>
