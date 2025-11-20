@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ const RegisterComponent = () => {
     <>
       <div className="min-h-screen w-full flex items-center justify-center">
         <div className="w-full max-w-md">
-          <div className="px-7 py-7 bg-white rounded-2xl border border-gray-200 shadow-md mb-4 mt-12">
+          <div className="px-7 py-7 bg-white rounded-2xl mb-4 mt-12">
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="text-center mb-4 space-y-2">
                 <h1 className="text-slate-700 text-3xl font-bold">

@@ -54,20 +54,18 @@ const FeaturedEvent = () => {
     <div className="w-full px-4 md:px-20 py-16">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl text-primary md:text-3xl font-bold text-text-dark mb-1">
-            Featured Event
+          <div className="h-1 bg-[#635bff] w-full max-w-32 rounded-full mb-3" />
+          <h2 className="text-3xl md:text-4xl font-bold text-[#111827] mb-2">
+            Acara Unggulan
           </h2>
+          <p className="text-[#6b7280] text-sm md:text-base">
+            Jelajahi berbagai event pilihan yang sedang berlangsung dan segera
+            datang
+          </p>
         </div>
-        <Link
-          href="/explore"
-          className="text-gray-500 font-semibold text-sm md:text-base hover:underline flex items-center gap-1"
-        >
-          See More
-          <ChevronRight size={16} />
-        </Link>
       </div>
 
-      <div className="grid auto-cols-[20rem] grid-flow-col gap-6 overflow-x-auto py-2 lg:grid-cols-4 lg:px-1 scrollbar-hide">
+      <div className="grid auto-cols-[20rem] grid-flow-col gap-6 overflow-x-auto py-2 lg:grid-cols-4 scrollbar-hide">
         {events.map((event) => (
           <div
             key={event.id}
@@ -97,6 +95,13 @@ const FeaturedEvent = () => {
           </div>
         ))}
       </div>
+      <Link
+        href="/explore"
+        className="text-gray-500 pt-5 float-end font-semibold text-sm md:text-base hover:underline flex items-center gap-1"
+      >
+        See More
+        <ChevronRight size={16} />
+      </Link>
     </div>
   );
 };
