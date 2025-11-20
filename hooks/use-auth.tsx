@@ -1,6 +1,6 @@
 "use client";
 
-import { ILogin, IRegister } from "@/types/auth.types";
+import { ILogin, IRegister } from "@/types/auth";
 import { useForm } from "react-hook-form";
 import { LoginService, RegisterService } from "@/service/auth.service";
 import { useRouter } from "next/navigation";
@@ -27,14 +27,15 @@ export const useAuth = () => {
       username: "",
       email: "",
       password: "",
+      confirm_password: "",
     },
   });
 
-  const handleLogin = async (values: ILogin) => {
+  const handleLogin = async (payload: ILogin) => {
     try {
       setIsLogin(true);
 
-      const res = await LoginService(values);
+      const res = await LoginService(payload);
 
       if (!res.status) {
         toast.error(res.message);
@@ -54,18 +55,25 @@ export const useAuth = () => {
     }
   };
 
-  const handleRegister = async (values: IRegister) => {
+  const handleRegister = async (payload: IRegister) => {
+    if (payload.password !== payload.confirm_password) {
+      toast.error("Password tidak sesuai");
+      return;
+    }
+
     try {
       setIsRegister(true);
-      const res = await RegisterService(values);
+
+      const res = await RegisterService(payload);
 
       if (!res.status) {
         toast.error(res.message);
+        console.error(res.message);
         return;
       }
 
       toast.success(res.message);
-      router.push("/auth/login");
+      router.push("/auth/success");
     } catch (err) {
       if (err instanceof Error) {
         toast.error(err.message);

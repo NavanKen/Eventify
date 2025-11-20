@@ -1,6 +1,6 @@
 "use server";
 
-import { ILogin, IRegister } from "@/types/auth.types";
+import { ILogin, IRegister } from "@/types/auth";
 import { createClient } from "@/lib/supabase/server";
 
 export const LoginService = async ({ email, password }: ILogin) => {
@@ -54,8 +54,7 @@ export const RegisterService = async ({
 
     const { data: usersData, error: usersError } = await supabase
       .from("users")
-      .insert({ name: username })
-      .eq("id", userId);
+      .insert({ id: userId, name: username });
 
     if (usersError) {
       return {
@@ -66,7 +65,7 @@ export const RegisterService = async ({
     }
 
     return {
-      status: false,
+      status: true,
       message: "Register Berhasil",
       data: usersData,
     };

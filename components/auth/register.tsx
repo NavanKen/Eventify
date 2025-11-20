@@ -1,10 +1,25 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, Loader2, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
 
 const RegisterComponent = () => {
+  const {
+    isRegister,
+    handleRegister,
+    registerForm,
+    setVisibleConfirmPassword,
+    setVisiblePassword,
+    visibleConfirmPassword,
+    visiblePassword,
+  } = useAuth();
+
+  const { register, handleSubmit } = registerForm;
+
   return (
     <>
       <div className="min-h-screen w-full flex items-center justify-center">
@@ -19,7 +34,10 @@ const RegisterComponent = () => {
                   Bergabunglah dengan kami dan pesan acara Anda berikutnya
                 </p>
               </div>
-              <form className="w-full space-y-5">
+              <form
+                className="w-full space-y-5"
+                onSubmit={handleSubmit(handleRegister)}
+              >
                 <div className="space-y-2">
                   <Label
                     htmlFor="username"
@@ -30,17 +48,11 @@ const RegisterComponent = () => {
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input
+                      {...register("username")}
                       id="username"
                       type="text"
                       name="username"
                       placeholder="Masukkan Username Anda"
-                      //   value={credential.email}
-                      //   onChange={(e) =>
-                      //     setCredential({
-                      //       ...credential,
-                      //       email: e.target.value,
-                      //     })
-                      //   }
                       className="pl-12 h-12 bg-gray-50 border-0 text-card-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                     />
                   </div>
@@ -55,17 +67,11 @@ const RegisterComponent = () => {
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input
+                      {...register("email")}
                       id="email"
                       type="email"
                       name="email"
                       placeholder="Masukkan Alamat Email"
-                      //   value={credential.email}
-                      //   onChange={(e) =>
-                      //     setCredential({
-                      //       ...credential,
-                      //       email: e.target.value,
-                      //     })
-                      //   }
                       className="pl-12 h-12 bg-gray-50 border-0 text-card-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                     />
                   </div>
@@ -80,28 +86,65 @@ const RegisterComponent = () => {
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input
+                      {...register("password")}
                       id="password"
-                      type="password"
+                      type={visiblePassword ? "text" : "password"}
                       name="password"
                       placeholder="Masukkan Password"
-                      //   value={credential.password}
-                      //   onChange={(e) =>
-                      //     setCredential({
-                      //       ...credential,
-                      //       password: e.target.value,
-                      //     })
-                      //   }
                       className="pl-12 h-12 bg-gray-50 border-0 text-card-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setVisiblePassword(!visiblePassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    >
+                      {visiblePassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="confirm_password"
+                    className="text-sm font-medium text-slate-700"
+                  >
+                    Konfirmasi Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                      {...register("confirm_password")}
+                      id="confim_password"
+                      type={visibleConfirmPassword ? "text" : "password"}
+                      name="confirm_password"
+                      placeholder="Masukkan Password"
+                      className="pl-12 h-12 bg-gray-50 border-0 text-card-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setVisibleConfirmPassword(!visibleConfirmPassword)
+                      }
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    >
+                      {visibleConfirmPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                    </button>
                   </div>
                 </div>
                 <div className="mb-3">
-                  {/* <Button
+                  <Button
                     type="submit"
-                    disabled={isLoggingIn ? true : false}
-                    className="bg-gradient-to-br from-orange-400 to-orange-600 w-full py-5 rounded-xl text-md text-neutral-100 cursor-pointer hover:bg-gradient-to-br hover:from-orange-400 hover:to-orange-600 transition duration-200"
+                    disabled={isRegister ? true : false}
+                    className="mt-3 w-full py-6 rounded-xl text-md text-neutral-100 cursor-pointer"
                   >
-                    {isLoggingIn ? (
+                    {isRegister ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
                         Loading...
@@ -109,9 +152,6 @@ const RegisterComponent = () => {
                     ) : (
                       "Masuk"
                     )}
-                  </Button> */}
-                  <Button className="mt-3  w-full py-6 rounded-xl text-md text-neutral-100 cursor-pointer">
-                    Daftar
                   </Button>
                 </div>
                 <p className="text-center text-gray-500 text-sm">

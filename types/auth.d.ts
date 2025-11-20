@@ -5,4 +5,5 @@ export interface ILogin {
 
 export interface IRegister extends ILogin {
   username: string;
+  confirm_password?: string;
 }
