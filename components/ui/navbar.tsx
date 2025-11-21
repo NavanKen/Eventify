@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Home, LayoutGrid, Wallet, Menu, X } from "lucide-react";
+import { Home, LayoutGrid, Menu, X } from "lucide-react";
 import { Button } from "./button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,11 +21,6 @@ const Navbar = () => {
       title: "Explore",
       href: "/explore",
       icon: LayoutGrid,
-    },
-    {
-      title: "Transaction",
-      href: "/transaction",
-      icon: Wallet,
     },
   ];
 

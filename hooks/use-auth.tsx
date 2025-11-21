@@ -1,19 +1,37 @@
 "use client";
 
-import { ILogin, IRegister } from "@/types/auth";
+import { ILogin, IRegister, IUser } from "@/types/auth";
 import { useForm } from "react-hook-form";
-import { LoginService, RegisterService } from "@/service/auth.service";
+import {
+  LoginService,
+  RegisterService,
+  GetUserService,
+} from "@/service/auth.service";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export const useAuth = () => {
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const [visiblePassword, setVisiblePassword] = useState(false);
   const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false);
+  const [user, setUser] = useState<IUser>({
+    id: "",
+    name: "",
+    email: "",
+    role: "",
+    avatar: "",
+    phone: "",
+    created_at: "",
+  });
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   const loginForm = useForm<ILogin>({
     defaultValues: {
@@ -31,6 +49,30 @@ export const useAuth = () => {
     },
   });
 
+  const getProfile = async () => {
+    try {
+      setIsLoading(true);
+
+      const res = await GetUserService();
+
+      if (!res.status) {
+        toast.error(res.message);
+        console.error(res.message);
+        return;
+      }
+
+      setUser(res.data?.profile ?? null);
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Terjadi kesalahan");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleLogin = async (payload: ILogin) => {
     try {
       setIsLogin(true);
@@ -43,7 +85,18 @@ export const useAuth = () => {
       }
 
       toast.success(res.message);
-      router.push("/dashboard");
+
+      switch (user.role) {
+        case "admin":
+          router.push("/admin");
+          break;
+        case "staff":
+          router.push("/staff");
+          break;
+        default:
+          router.push("/");
+          break;
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.message);
@@ -86,8 +139,10 @@ export const useAuth = () => {
   };
 
   return {
+    user,
     isLogin,
     isRegister,
+    isLoading,
     visiblePassword,
     visibleConfirmPassword,
     setVisiblePassword,

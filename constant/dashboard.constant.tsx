@@ -1,6 +1,6 @@
 import { LayoutGrid, Wallet, List, Tag, Bookmark } from "lucide-react";
 
-const SIDEBAR_EMPLOYE = [
+const SIDEBAR_STAFF = [
   {
     key: "Dashboard",
     label: "Dashboard",
@@ -14,10 +14,10 @@ const SIDEBAR_EMPLOYE = [
     icon: <List className="w-5 h-5" />,
   },
   {
-    key: "Banner",
-    label: "Banner",
-    href: "/admin/banner",
-    icon: <Bookmark className="w-5 h-5" />,
+    key: "Transaction",
+    label: "Transaction",
+    href: "/admin/transaction",
+    icon: <Wallet className="w-5 h-5" />,
   },
 ];
 
@@ -54,4 +54,4 @@ const SIDEBAR_ADMIN = [
   },
 ];
 
-export { SIDEBAR_ADMIN, SIDEBAR_EMPLOYE };
+export { SIDEBAR_ADMIN, SIDEBAR_STAFF };

@@ -80,6 +80,44 @@ export const RegisterService = async ({
 
 export const GetUserService = async () => {
   const supabase = await createClient();
+
+  try {
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error) {
+      return {
+        status: false,
+        message: error?.message,
+      };
+    }
+
+    const { data: userProfile, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
+
+    if (userError) {
+      return {
+        status: false,
+        message: userError?.message,
+      };
+    }
+    return {
+      status: true,
+      message: "Berhasil Mendapatkan Data",
+      data: {
+        auth: data.user,
+        profile: userProfile,
+      },
+    };
+  } catch (err) {
+    return {
+      status: false,
+      message: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      data: null,
+    };
+  }
 };
 
 export const LogoutService = async () => {

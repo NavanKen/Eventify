@@ -3,11 +3,11 @@
 import { useMemo, useState, ReactNode } from "react";
 import DashboardNavbar from "./navbar-layout";
 import DashboardLayoutSidebar from "./sidebar-layout";
-import { SIDEBAR_ADMIN, SIDEBAR_EMPLOYE } from "@/constant/dashboard.constant";
+import { SIDEBAR_ADMIN, SIDEBAR_STAFF } from "@/constant/dashboard.constant";
 
 type DashboardLayoutProps = {
   children: ReactNode;
-  type: "admin" | "user";
+  type: "admin" | "staff";
 };
 
 const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
@@ -16,7 +16,7 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const sidebarItems = useMemo(() => {
-    if (type === "user") return SIDEBAR_EMPLOYE;
+    if (type === "staff") return SIDEBAR_STAFF;
     if (type === "admin") return SIDEBAR_ADMIN;
     return [];
   }, [type]);

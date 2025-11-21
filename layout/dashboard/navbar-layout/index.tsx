@@ -3,6 +3,7 @@
 import { LogOut, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/hooks/use-auth";
 
 interface DashboardNavbarProps {
   toggleMenu: () => void;
@@ -11,12 +12,7 @@ interface DashboardNavbarProps {
 const DashboardNavbar = ({ toggleMenu }: DashboardNavbarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const user = {
-    username: "Naufal",
-    avatar_url: "",
-    email: "afandinaufal67@gmail.com",
-  };
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -40,22 +36,22 @@ const DashboardNavbar = ({ toggleMenu }: DashboardNavbarProps) => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            {user.avatar_url ? (
+            {user?.avatar ? (
               <Image
-                src={user.avatar_url}
-                alt={user.username}
+                src={user?.avatar}
+                alt={user.name}
                 className="w-9 h-9 rounded-full object-cover"
                 width={36}
                 height={36}
               />
             ) : (
               <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-semibold">
-                {user.username.charAt(0)}
+                {user?.name.charAt(0)}
               </div>
             )}
             <div className="hidden md:block text-left">
-              <p className="text-sm font-semibold">{user.username}</p>
-              <p className="text-xs text-gray-500">{user.email}</p>
+              <p className="text-sm font-semibold">{user.name}</p>
+              <p className="text-xs text-gray-500">{user?.email}</p>
             </div>
           </button>
           <button
@@ -69,23 +65,21 @@ const DashboardNavbar = ({ toggleMenu }: DashboardNavbarProps) => {
         {isDropdownOpen && (
           <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
             <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-3">
-              {user.avatar_url ? (
+              {user.avatar ? (
                 <Image
-                  src={user.avatar_url}
-                  alt={user.username}
+                  src={user.avatar}
+                  alt={user.name}
                   className="w-12 h-12 rounded-full object-cover"
                   width={48}
                   height={48}
                 />
               ) : (
                 <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-semibold text-lg">
-                  {user.username.charAt(0)}
+                  {user.name.charAt(0)}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate">
-                  {user.username}
-                </p>
+                <p className="text-sm font-semibold truncate">{user.name}</p>
                 <p className="text-xs text-gray-500 truncate">{user.email}</p>
               </div>
             </div>
