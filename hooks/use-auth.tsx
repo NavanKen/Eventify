@@ -1,11 +1,12 @@
 "use client";
 
-import { ILogin, IRegister, IUser } from "@/types/auth";
+import { ILogin, IRegister, IUser } from "@/types/global";
 import { useForm } from "react-hook-form";
 import {
   LoginService,
   RegisterService,
   GetUserService,
+  LogoutService,
 } from "@/service/auth.service";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -55,12 +56,6 @@ export const useAuth = () => {
 
       const res = await GetUserService();
 
-      if (!res.status) {
-        toast.error(res.message);
-        console.error(res.message);
-        return;
-      }
-
       setUser(res.data?.profile ?? null);
     } catch (err) {
       if (err instanceof Error) {
@@ -86,7 +81,10 @@ export const useAuth = () => {
 
       toast.success(res.message);
 
-      switch (user.role) {
+      const user = await GetUserService();
+      const role = user.data?.profile.role;
+
+      switch (role) {
         case "admin":
           router.push("/admin");
           break;
@@ -138,6 +136,25 @@ export const useAuth = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const res = await LogoutService();
+      if (!res.status) {
+        toast.error(res.message);
+        return;
+      }
+      toast.success(res.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Terjadi kesalahan");
+      }
+    } finally {
+      router.push("/auth/login");
+    }
+  };
+
   return {
     user,
     isLogin,
@@ -151,5 +168,6 @@ export const useAuth = () => {
     registerForm,
     handleLogin,
     handleRegister,
+    handleLogout,
   };
 };

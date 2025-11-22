@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface IPagination {
-  currentPage: number;
+  currentPage?: number;
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -15,12 +15,12 @@ export const Pagination = ({
   onPageChange,
 }: IPagination) => {
   const activePage = currentPage || page || 1;
-  const safeTotal = totalPages || 0;
+  const safeTotal = totalPages || 1; // Default ke 1 jika tidak ada data
 
   return (
     <div className="flex items-center justify-end gap-3">
       <span className="text-sm text-muted-foreground">
-        Halaman {activePage} dari {safeTotal}
+        Halaman {safeTotal === 0 ? 0 : activePage} dari {safeTotal === 0 ? 0 : safeTotal}
       </span>
 
       <Button

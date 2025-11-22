@@ -1,4 +1,4 @@
-import { LayoutGrid, Wallet, List, Tag, Bookmark } from "lucide-react";
+import { LayoutGrid, Wallet, List, Tag, Bookmark, User } from "lucide-react";
 
 const SIDEBAR_STAFF = [
   {
@@ -51,6 +51,12 @@ const SIDEBAR_ADMIN = [
     label: "Transaction",
     href: "/admin/transaction",
     icon: <Wallet className="w-5 h-5" />,
+  },
+  {
+    key: "Users",
+    label: "Users",
+    href: "/admin/users",
+    icon: <User className="w-5 h-5" />,
   },
 ];
 

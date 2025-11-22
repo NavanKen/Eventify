@@ -1,6 +1,6 @@
 "use server";
 
-import { ILogin, IRegister } from "@/types/auth";
+import { ILogin, IRegister } from "@/types/global";
 import { createClient } from "@/lib/supabase/server";
 
 export const LoginService = async ({ email, password }: ILogin) => {
@@ -122,4 +122,25 @@ export const GetUserService = async () => {
 
 export const LogoutService = async () => {
   const supabase = await createClient();
+  try {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      return {
+        status: false,
+        message: error?.message,
+      };
+    }
+
+    return {
+      status: true,
+      message: "Berhasil Keluar",
+    };
+  } catch (err) {
+    return {
+      status: false,
+      message: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      data: null,
+    };
+  }
 };
