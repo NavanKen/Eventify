@@ -1,11 +1,5 @@
-const TransactionPage = () => {
-  return (
-    <>
-      <div>
-        <h1>woe</h1>
-      </div>
-    </>
-  );
-};
+import TransactionComponent from "@/components/management/transaction";
 
-export default TransactionPage;
+export default function TransactionPage() {
+  return <TransactionComponent />;
+}

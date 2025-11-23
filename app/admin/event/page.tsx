@@ -1,7 +1,5 @@
+import EventComponent from "@/components/management/event";
+
 export default function EventPages() {
-  return (
-    <>
-      <h1>Hello</h1>
-    </>
-  );
+  return <EventComponent />;
 }
