@@ -45,3 +45,26 @@ export interface ICategory {
   description?: string;
   created_at?: Date;
 }
+
+// Banner
+export interface IBanner {
+  id?: string;
+  title: string;
+  image_url?: string;
+  file?: File | null;
+  status?: boolean;
+  created_at?: Date;
+}
+
+// User
+export interface IUserManagement {
+  id?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  avatar?: string;
+  file?: File | null;
+  password?: string;
+  role?: "customer" | "admin" | "staff" | string;
+  created_at?: Date;
+}

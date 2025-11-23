@@ -3,18 +3,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
-  createBanner,
-  getBannerService,
-  updateBanner,
-  deleteBanner,
-} from "@/service/banner.service";
-import { IBanner } from "@/types/global";
+  createUser,
+  getUserService,
+  updateUser,
+  deleteUser,
+} from "@/service/user.service";
+import { IUserManagement } from "@/types/global";
 import { toast } from "sonner";
 
-export const useBanner = (search?: string, limit?: number, page?: number) => {
-  const createForm = useForm<IBanner>();
-  const editForm = useForm<IBanner>();
-  const [banners, setBanners] = useState<IBanner[]>([]);
+export const useUser = (search?: string, limit?: number, page?: number) => {
+  const createForm = useForm<IUserManagement>();
+  const editForm = useForm<IUserManagement>();
+  const [users, setUsers] = useState<IUserManagement[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
@@ -24,12 +24,12 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [editPreview, setEditPreview] = useState<string | null>(null);
 
-  const fetchBanners = useCallback(async () => {
+  const fetchUsers = useCallback(async () => {
     const offset = (page! - 1) * limit!;
-    const res = await getBannerService({ search, limit, offset });
+    const res = await getUserService({ search, limit, offset });
 
     if (res.status && res.data) {
-      setBanners(res.data);
+      setUsers(res.data);
       setTotal(res.count ?? 0);
     }
     setIsLoading(false);
@@ -37,10 +37,10 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
 
   useEffect(() => {
     const loadData = async () => {
-      await fetchBanners();
+      await fetchUsers();
     };
     loadData();
-  }, [fetchBanners]);
+  }, [fetchUsers]);
 
   const handleOpenChange = (open: boolean) => {
     setCreateOpen(open);
@@ -63,12 +63,12 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
     setPreview(url);
   };
 
-  const handleCreate = async (payload: IBanner) => {
-    const { title, file, status } = payload;
+  const handleCreate = async (payload: IUserManagement) => {
+    const { name, email, password, phone, file, role } = payload;
 
     setIsCreate(true);
 
-    const res = await createBanner({ title, file, status });
+    const res = await createUser({ name, email, password, phone, file, role });
 
     if (!res.status) {
       toast.error(res.message);
@@ -76,23 +76,25 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
       return;
     }
     toast.success(res.message);
-    await fetchBanners();
+    await fetchUsers();
     setIsCreate(false);
     handleOpenChange(false);
   };
 
-  const handleEditOpenChange = (open: boolean, bannerId?: string) => {
-    if (open && bannerId) {
-      setEditOpenId(bannerId);
-      const bannerToEdit = banners.find((ban) => ban.id === bannerId);
-      if (bannerToEdit) {
+  const handleEditOpenChange = (open: boolean, userId?: string) => {
+    if (open && userId) {
+      setEditOpenId(userId);
+      const userToEdit = users.find((user) => user.id === userId);
+      if (userToEdit) {
         editForm.reset({
-          id: bannerToEdit.id,
-          title: bannerToEdit.title,
-          image_url: bannerToEdit.image_url,
-          status: bannerToEdit.status,
+          id: userToEdit.id,
+          name: userToEdit.name,
+          email: userToEdit.email,
+          phone: userToEdit.phone,
+          avatar: userToEdit.avatar,
+          role: userToEdit.role,
         });
-        setEditPreview(bannerToEdit.image_url || null);
+        setEditPreview(userToEdit.avatar || null);
       }
     } else {
       setEditOpenId(null);
@@ -113,20 +115,22 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
     setEditPreview(url);
   };
 
-  const handleEdit = async (payload: IBanner) => {
+  const handleEdit = async (payload: IUserManagement) => {
     setIsEdit(true);
 
-    let imageToUse = payload.image_url;
+    let imageToUse = payload.avatar;
     if (payload.file) {
       imageToUse = undefined;
     }
 
-    const res = await updateBanner({
+    const res = await updateUser({
       id: payload.id,
-      title: payload.title,
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
       file: payload.file,
-      image_url: imageToUse || payload.image_url,
-      status: payload.status,
+      avatar: imageToUse || payload.avatar,
+      role: payload.role,
     });
 
     if (!res.status) {
@@ -135,13 +139,13 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
       return;
     }
     toast.success(res.message);
-    await fetchBanners();
+    await fetchUsers();
     setIsEdit(false);
     handleEditOpenChange(false);
   };
 
-  const handleDelete = async (id: string, imageUrl?: string) => {
-    const res = await deleteBanner(id, imageUrl);
+  const handleDelete = async (id: string, avatarUrl?: string) => {
+    const res = await deleteUser(id, avatarUrl);
 
     if (!res.status) {
       toast.error(res?.pesan || "Gagal menghapus data");
@@ -149,11 +153,11 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
     }
 
     toast.success(res?.pesan);
-    await fetchBanners();
+    await fetchUsers();
   };
 
   return {
-    banners,
+    users,
     total,
     isLoading,
     createOpen,
@@ -171,7 +175,7 @@ export const useBanner = (search?: string, limit?: number, page?: number) => {
     handleEditImageChange,
     handleEditOpenChange,
     editPreview,
-    fetchBanners,
+    fetchUsers,
     handleDelete,
   };
 };

@@ -1,21 +1,19 @@
-import { ICategory } from "@/types/global";
+import { IBanner } from "@/types/global";
 import { supabase } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/helper/upload-file";
 import { IGetDataParams } from "@/types/global";
-import { getTimestamp } from "@/lib/helper/get-time";
 import { environment } from "@/lib/config/env";
 
-export const getCategoryService = async ({
+export const getBannerService = async ({
   search = "",
   limit = 10,
   offset = 0,
 }: IGetDataParams) => {
   try {
     const query = supabase
-      .from("category")
+      .from("banner")
       .select("*", { count: "exact" })
-      .ilike("name", `%${search}%`)
-      .order("updated_at", { ascending: false, nullsFirst: false })
+      .ilike("title", `%${search}%`)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -35,15 +33,15 @@ export const getCategoryService = async ({
   }
 };
 
-export const createCategory = async (payload: ICategory) => {
+export const createBanner = async (payload: IBanner) => {
   try {
-    const { name, description, file } = payload;
+    const { title, file, status } = payload;
 
-    const image = await uploadFile(file!, "category");
+    const image_url = await uploadFile(file!, "banners");
 
     const { error } = await supabase
-      .from("category")
-      .insert({ name, description, image });
+      .from("banner")
+      .insert({ title, image_url, status: status ?? true });
 
     if (error) {
       return {
@@ -54,7 +52,7 @@ export const createCategory = async (payload: ICategory) => {
 
     return {
       status: true,
-      message: "Berhasil Menabah Data Category",
+      message: "Berhasil Menambah Data Banner",
     };
   } catch (err) {
     return {
@@ -65,19 +63,19 @@ export const createCategory = async (payload: ICategory) => {
   }
 };
 
-export const updateCategory = async (payload: ICategory) => {
+export const updateBanner = async (payload: IBanner) => {
   try {
-    const { id, name, description, file } = payload;
+    const { id, title, file, status, image_url } = payload;
 
-    let image = payload.image;
+    let finalImageUrl = image_url;
 
     if (file) {
-      image = await uploadFile(file, "category", payload.image);
+      finalImageUrl = await uploadFile(file, "banners", image_url);
     }
 
     const { error } = await supabase
-      .from("category")
-      .update({ name, description, image, updated_at: getTimestamp() })
+      .from("banner")
+      .update({ title, image_url: finalImageUrl, status })
       .eq("id", id);
 
     if (error) {
@@ -89,7 +87,7 @@ export const updateCategory = async (payload: ICategory) => {
 
     return {
       status: true,
-      message: "Berhasil Mengubah Data Category",
+      message: "Berhasil Mengubah Data Banner",
     };
   } catch (err) {
     return {
@@ -100,7 +98,7 @@ export const updateCategory = async (payload: ICategory) => {
   }
 };
 
-export const deleteCategory = async (id: string, imageUrl?: string) => {
+export const deleteBanner = async (id: string, imageUrl?: string) => {
   try {
     if (imageUrl) {
       const oldPath = imageUrl.replace(
@@ -112,7 +110,7 @@ export const deleteCategory = async (id: string, imageUrl?: string) => {
         .remove([oldPath]);
     }
 
-    const { error } = await supabase.from("category").delete().eq("id", id);
+    const { error } = await supabase.from("banner").delete().eq("id", id);
 
     if (error) {
       return {
@@ -123,7 +121,7 @@ export const deleteCategory = async (id: string, imageUrl?: string) => {
 
     return {
       status: true,
-      pesan: "Berhasil Menghapus Data Category",
+      pesan: "Berhasil Menghapus Data Banner",
     };
   } catch (err) {
     return {

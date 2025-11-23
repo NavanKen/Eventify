@@ -6,7 +6,7 @@ import {
   createCategory,
   getCategoryService,
   updateCategory,
-  KategoriDelete,
+  deleteCategory,
 } from "@/service/category.service";
 import { ICategory } from "@/types/global";
 import { toast } from "sonner";
@@ -84,7 +84,7 @@ export const useCategory = (search?: string, limit?: number, page?: number) => {
   const handleEditOpenChange = (open: boolean, categoryId?: string) => {
     if (open && categoryId) {
       setEditOpenId(categoryId);
-      const categoryToEdit = categories.find(cat => cat.id === categoryId);
+      const categoryToEdit = categories.find((cat) => cat.id === categoryId);
       if (categoryToEdit) {
         editForm.reset({
           id: categoryToEdit.id,
@@ -141,7 +141,7 @@ export const useCategory = (search?: string, limit?: number, page?: number) => {
   };
 
   const handleDelete = async (id: string, imageUrl?: string) => {
-    const res = await KategoriDelete(id, imageUrl);
+    const res = await deleteCategory(id, imageUrl);
 
     if (!res.status) {
       toast.error(res?.pesan || "Gagal menghapus data");
