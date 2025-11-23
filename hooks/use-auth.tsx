@@ -8,12 +8,14 @@ import {
   GetUserService,
   LogoutService,
 } from "@/service/auth.service";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 export const useAuth = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
@@ -83,6 +85,11 @@ export const useAuth = () => {
 
       const user = await GetUserService();
       const role = user.data?.profile.role;
+
+      if (callbackUrl) {
+        router.push(callbackUrl);
+        return;
+      }
 
       switch (role) {
         case "admin":
