@@ -33,6 +33,31 @@ export const getBannerService = async ({
   }
 };
 
+// Get random banners for landing page (max 5)
+export const getRandomBanners = async (limit: number = 5) => {
+  try {
+    const { data, error } = await supabase
+      .from("banner")
+      .select("*")
+      .eq("status", true)
+      .limit(limit);
+
+    if (error) {
+      return { status: false, error };
+    }
+
+    // Shuffle array untuk random order
+    const shuffled = data?.sort(() => Math.random() - 0.5) || [];
+    return { status: true, data: shuffled.slice(0, limit) };
+  } catch (err) {
+    return {
+      status: false,
+      message: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      data: null,
+    };
+  }
+};
+
 export const createBanner = async (payload: IBanner) => {
   try {
     const { title, file, status } = payload;

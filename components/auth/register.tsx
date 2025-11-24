@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, Lock, Loader2, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuthContext } from "@/hooks/auth-context";
 
 const RegisterComponent = () => {
   const {
@@ -16,7 +16,7 @@ const RegisterComponent = () => {
     setVisiblePassword,
     visibleConfirmPassword,
     visiblePassword,
-  } = useAuth();
+  } = useAuthContext();
 
   const { register, handleSubmit } = registerForm;
 

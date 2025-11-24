@@ -4,6 +4,7 @@ import { uploadFile } from "@/lib/helper/upload-file";
 import { IGetDataParams } from "@/types/global";
 import { environment } from "@/lib/config/env";
 
+// Get all events for admin (published & unpublished)
 export const getEventService = async ({
   search = "",
   limit = 10,
@@ -24,6 +25,85 @@ export const getEventService = async ({
     }
 
     return { status: true, data, count };
+  } catch (err) {
+    return {
+      status: false,
+      message: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      data: null,
+    };
+  }
+};
+
+// Get published events for public pages (landing, explore)
+export const getPublishedEvents = async ({
+  search = "",
+  limit = 10,
+  offset = 0,
+}: IGetDataParams) => {
+  try {
+    const query = supabase
+      .from("event")
+      .select("*, category(name)", { count: "exact" })
+      .eq("status", "published")
+      .ilike("title", `%${search}%`)
+      .order("created_at", { ascending: false })
+      .range(offset, offset + limit - 1);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return { status: false, error };
+    }
+
+    return { status: true, data, count };
+  } catch (err) {
+    return {
+      status: false,
+      message: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      data: null,
+    };
+  }
+};
+
+// Get featured events (random, max 4) - published only
+export const getFeaturedEvents = async (limit: number = 4) => {
+  try {
+    const { data, error } = await supabase
+      .from("event")
+      .select("*, category(name)")
+      .eq("status", "published")
+      .limit(limit * 2);
+
+    if (error) {
+      return { status: false, error };
+    }
+
+    const shuffled = data?.sort(() => Math.random() - 0.5) || [];
+    return { status: true, data: shuffled.slice(0, limit) };
+  } catch (err) {
+    return {
+      status: false,
+      message: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      data: null,
+    };
+  }
+};
+
+// Get latest events (max 4) - published only
+export const getLatestEvents = async (limit: number = 4) => {
+  try {
+    const { data, error } = await supabase
+      .from("event")
+      .select("*, category(name)")
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      return { status: false, error };
+    }
+
+    return { status: true, data };
   } catch (err) {
     return {
       status: false,

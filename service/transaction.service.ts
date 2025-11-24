@@ -104,6 +104,29 @@ export const createTransaction = async (payload: ITransaction) => {
 
     const user_id = user.data?.auth.id;
 
+    // 1) Check ticket availability first
+    const { data: ticketRow, error: ticketError } = await supabase
+      .from("ticket")
+      .select("id, quota, sold")
+      .eq("id", ticket_id)
+      .single();
+
+    if (ticketError || !ticketRow) {
+      return {
+        status: false,
+        message: ticketError?.message || "Tiket tidak ditemukan",
+      };
+    }
+
+    const available = (ticketRow.quota || 0) - (ticketRow.sold || 0);
+    if (quantity > available) {
+      return {
+        status: false,
+        message: `Tiket hanya tersedia ${available} buah`,
+      };
+    }
+
+    // 2) Create transaction
     const { data, error } = await supabase
       .from("transaction")
       .insert({
@@ -141,6 +164,135 @@ export const createTransaction = async (payload: ITransaction) => {
         return {
           status: false,
           message: passError?.message,
+        };
+      }
+
+      // 3) Increment sold after successful ticket_pass creation
+      const newSold = (ticketRow.sold || 0) + quantity;
+      const { error: updateSoldError } = await supabase
+        .from("ticket")
+        .update({ sold: newSold, updated_at: new Date().toISOString() })
+        .eq("id", ticket_id);
+
+      if (updateSoldError) {
+        return {
+          status: false,
+          message: updateSoldError?.message,
+        };
+      }
+    }
+
+    return {
+      status: true,
+      message: "Berhasil Membuat Transaksi",
+      data,
+    };
+  } catch (err) {
+    return {
+      status: false,
+      message: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      data: null,
+    };
+  }
+};
+
+
+export const createOnlineTransaction = async (payload: ITransaction) => {
+  try {
+    const {
+      order_code,
+      event_id,
+      ticket_id,
+      quantity,
+      total_price,
+    } = payload;
+
+    const user = await GetUserService();
+
+    if (!user.status) {
+      return {
+        status: false,
+        message: user.message,
+      };
+    }
+
+    const user_id = user.data?.auth.id;
+    const customer_name = user.data?.profile.name;
+
+    // 1) Check ticket availability first
+    const { data: ticketRow, error: ticketError } = await supabase
+      .from("ticket")
+      .select("id, quota, sold")
+      .eq("id", ticket_id)
+      .single();
+
+    if (ticketError || !ticketRow) {
+      return {
+        status: false,
+        message: ticketError?.message || "Tiket tidak ditemukan",
+      };
+    }
+
+    const available = (ticketRow.quota || 0) - (ticketRow.sold || 0);
+    if (quantity > available) {
+      return {
+        status: false,
+        message: `Tiket hanya tersedia ${available} buah`,
+      };
+    }
+
+    // 2) Create transaction
+    const { data, error } = await supabase
+      .from("transaction")
+      .insert({
+        order_code,
+        user_id,
+        event_id,
+        ticket_id,
+        quantity,
+        total_price,
+        payment_status: "completed",
+        customer_name,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return {
+        status: false,
+        message: error?.message,
+      };
+    }
+
+    if (data && quantity > 0) {
+      const ticketPasses = Array.from({ length: quantity }).map(() => ({
+        transaction_id: data.id,
+        ticket_id,
+        qr_code: `${data.id}-${Math.random().toString(36).substr(2, 9)}`,
+      }));
+
+      const { error: passError } = await supabase
+        .from("ticket_pass")
+        .insert(ticketPasses);
+
+      if (passError) {
+        return {
+          status: false,
+          message: passError?.message,
+        };
+      }
+
+      // 3) Increment sold after successful ticket_pass creation
+      const newSold = (ticketRow.sold || 0) + quantity;
+      const { error: updateSoldError } = await supabase
+        .from("ticket")
+        .update({ sold: newSold, updated_at: new Date().toISOString() })
+        .eq("id", ticket_id);
+
+      if (updateSoldError) {
+        return {
+          status: false,
+          message: updateSoldError?.message,
         };
       }
     }

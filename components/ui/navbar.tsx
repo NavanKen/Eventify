@@ -2,16 +2,27 @@
 
 import { motion } from "motion/react";
 import Link from "next/link";
-import { Home, LayoutGrid, Menu, X } from "lucide-react";
+import { Home, LayoutGrid, Menu } from "lucide-react";
 import { Button } from "./button";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useNavbar } from "@/hooks/use-navbar";
+import MobileMenu from "@/components/navbar/mobile-menu";
+import ProfileDropdown from "@/components/navbar/profile-dropdown";
 
 const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
+  const {
+    isMobileMenuOpen,
+    toggleMobileMenu,
+    isProfileDropdownOpen,
+    toggleProfileDropdown,
+    user,
+    handleDashboardClick,
+    handleLogoutClick,
+    navItems,
+  } = useNavbar();
 
-  const navItems = [
+  const navItemsWithIcons = [
     {
       title: "Home",
       href: "/",
@@ -33,7 +44,7 @@ const Navbar = () => {
               Eventify
             </h2>
             <div className="hidden md:flex md:space-x-5 md:pt-0.5 text-gray-700">
-              {navItems.map((nav, index) => (
+              {navItemsWithIcons.map((nav, index) => (
                 <motion.div key={index} className="relative group">
                   <Link
                     className="leading-normal text-text-dark hover:text-primary text-md font-medium transition-colors duration-200 py-2 relative inline-block"
@@ -54,66 +65,50 @@ const Navbar = () => {
 
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-2">
-              <Button
-                onClick={() => router.push("/auth/login")}
-                className="px-5 h-10 min-w-[84px] max-w-[480px] cursor-pointer bg-gray-100 text-text-dark hover:bg-gray-200 transition-colors"
-              >
-                Login
-              </Button>
-              <Button
-                onClick={() => router.push("/auth/register")}
-                className="px-5 h-10 min-w-[84px] max-w-[480px] cursor-pointer"
-              >
-                Register
-              </Button>
+              {user?.id ? (
+                <ProfileDropdown
+                  user={user}
+                  isOpen={isProfileDropdownOpen}
+                  onToggle={toggleProfileDropdown}
+                  onDashboardClick={handleDashboardClick}
+                  onLogoutClick={handleLogoutClick}
+                />
+              ) : (
+                <>
+                  <Button
+                    onClick={() => router.push("/auth/login")}
+                    className="px-5 h-10 min-w-[84px] max-w-[480px] cursor-pointer bg-gray-100 text-text-dark hover:bg-gray-200 transition-colors"
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    onClick={() => router.push("/auth/register")}
+                    className="px-5 h-10 min-w-[84px] max-w-[480px] cursor-pointer"
+                  >
+                    Register
+                  </Button>
+                </>
+              )}
             </div>
 
             <button
               className="md:hidden p-2 text-gray-700 hover:text-primary transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={toggleMobileMenu}
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <Menu size={24} />
             </button>
           </div>
         </div>
 
-        <motion.div
-          initial={false}
-          animate={{
-            height: isMobileMenuOpen ? "auto" : 0,
-            opacity: isMobileMenuOpen ? 1 : 0,
-          }}
-          transition={{ duration: 0.3 }}
-          className="md:hidden overflow-hidden bg-white border-b border-[#E5E7EB]"
-        >
-          <div className="px-4 py-4 space-y-3">
-            {navItems.map((nav, index) => (
-              <Link
-                key={index}
-                href={nav.href}
-                className="flex items-center gap-3 py-2 px-3 text-text-dark hover:text-primary hover:bg-gray-50 rounded-lg transition-colors duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <nav.icon size={20} />
-                <span className="font-medium">{nav.title}</span>
-              </Link>
-            ))}
-            <div className="pt-2 space-y-2 border-t border-gray-200">
-              <Button
-                onClick={() => router.push("/auth/login")}
-                className="w-full h-10 cursor-pointer bg-gray-100 text-text-dark hover:bg-gray-200 transition-colors"
-              >
-                Login
-              </Button>
-              <Button
-                onClick={() => router.push("/auth/register")}
-                className="w-full h-10 cursor-pointer"
-              >
-                Register
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={toggleMobileMenu}
+          navItems={navItems}
+          isLoggedIn={!!user.id}
+          user={user}
+          onDashboardClick={handleDashboardClick}
+          onLogoutClick={handleLogoutClick}
+        />
       </nav>
     </>
   );

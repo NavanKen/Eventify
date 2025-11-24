@@ -3,7 +3,7 @@
 import { LogOut, Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuthContext } from "@/hooks/auth-context";
 
 interface DashboardNavbarProps {
   toggleMenu: () => void;
@@ -12,7 +12,7 @@ interface DashboardNavbarProps {
 const DashboardNavbar = ({ toggleMenu }: DashboardNavbarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { user, handleLogout } = useAuth();
+  const { user, handleLogout } = useAuthContext();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

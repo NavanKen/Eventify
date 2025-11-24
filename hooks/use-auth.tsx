@@ -91,6 +91,8 @@ export const useAuth = () => {
         return;
       }
 
+      await getProfile();
+
       switch (role) {
         case "admin":
           router.push("/admin");
@@ -158,6 +160,15 @@ export const useAuth = () => {
         toast.error("Terjadi kesalahan");
       }
     } finally {
+      setUser({
+        id: "",
+        name: "",
+        email: "",
+        role: "",
+        avatar: "",
+        phone: "",
+        created_at: "",
+      });
       router.push("/auth/login");
     }
   };

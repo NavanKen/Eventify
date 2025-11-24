@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, Lock, Loader2, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuthContext } from "@/hooks/auth-context";
 
 const LoginComponent = () => {
   const {
@@ -14,7 +14,7 @@ const LoginComponent = () => {
     isLogin,
     visiblePassword,
     setVisiblePassword,
-  } = useAuth();
+  } = useAuthContext();
   const { register, handleSubmit } = loginForm;
 
   return (
