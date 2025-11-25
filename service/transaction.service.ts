@@ -10,7 +10,11 @@ export const getTransactionService = async ({
   role,
   userId,
   paymentStatus,
-}: IGetDataParams & { role?: string; userId?: string; paymentStatus?: string }) => {
+}: IGetDataParams & {
+  role?: string;
+  userId?: string;
+  paymentStatus?: string;
+}) => {
   try {
     let query = supabase
       .from("transaction_search_view")
@@ -20,7 +24,7 @@ export const getTransactionService = async ({
       );
 
     if (search) {
-     query = query.or(
+      query = query.or(
         `order_code.ilike.%${search}%,event_title.ilike.%${search}%,ticket_name.ilike.%${search}%,user_name.ilike.%${search}%`
       );
     }
@@ -39,7 +43,7 @@ export const getTransactionService = async ({
 
     const { data, error, count } = await query;
 
-    console.log("data",data)
+    console.log("data", data);
 
     if (error) {
       return { status: false, error };
@@ -145,7 +149,6 @@ export const createTransaction = async (payload: ITransaction) => {
       };
     }
 
-  
     const { data, error } = await supabase
       .from("transaction")
       .insert({
@@ -214,16 +217,9 @@ export const createTransaction = async (payload: ITransaction) => {
   }
 };
 
-
 export const createOnlineTransaction = async (payload: ITransaction) => {
   try {
-    const {
-      order_code,
-      event_id,
-      ticket_id,
-      quantity,
-      total_price,
-    } = payload;
+    const { order_code, event_id, ticket_id, quantity, total_price } = payload;
 
     const user = await GetUserService();
 
@@ -257,7 +253,6 @@ export const createOnlineTransaction = async (payload: ITransaction) => {
         message: `Tiket hanya tersedia ${available} buah`,
       };
     }
-
 
     const { data, error } = await supabase
       .from("transaction")
@@ -379,6 +374,48 @@ export const updateTransaction = async (payload: ITransaction) => {
 
 export const deleteTransaction = async (id: string) => {
   try {
+    const { data: trx, error: trxError } = await supabase
+      .from("transaction")
+      .select("ticket_id, quantity")
+      .eq("id", id)
+      .single();
+
+    if (trxError || !trx) {
+      return {
+        status: false,
+        pesan: trxError?.message || "Transaksi tidak ditemukan",
+      };
+    }
+
+    const { ticket_id, quantity } = trx;
+
+    const { data: ticketRow, error: ticketError } = await supabase
+      .from("ticket")
+      .select("sold")
+      .eq("id", ticket_id)
+      .single();
+
+    if (ticketError || !ticketRow) {
+      return {
+        status: false,
+        pesan: ticketError?.message || "Tiket tidak ditemukan",
+      };
+    }
+
+    const newSold = Math.max((ticketRow.sold || 0) - quantity, 0);
+
+    const { error: updateError } = await supabase
+      .from("ticket")
+      .update({ sold: newSold, updated_at: new Date().toISOString() })
+      .eq("id", ticket_id);
+
+    if (updateError) {
+      return {
+        status: false,
+        pesan: updateError?.message,
+      };
+    }
+
     await supabase.from("ticket_pass").delete().eq("transaction_id", id);
 
     const { error } = await supabase.from("transaction").delete().eq("id", id);
@@ -392,12 +429,12 @@ export const deleteTransaction = async (id: string) => {
 
     return {
       status: true,
-      pesan: "Berhasil Menghapus Transaksi",
+      pesan: "Berhasil Menghapus Transaksi & Mengembalikan Sold",
     };
   } catch (err) {
     return {
       status: false,
-      pesan: err instanceof Error ? err.message : "Tejadi Kesalahan",
+      pesan: err instanceof Error ? err.message : "Terjadi Kesalahan",
     };
   }
 };
