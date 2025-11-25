@@ -6,8 +6,9 @@ import { Mail, Lock, Loader2, EyeOff, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAuthContext } from "@/hooks/auth-context";
+import { Suspense } from "react";
 
-const LoginComponent = () => {
+const Login = () => {
   const {
     loginForm,
     handleLogin,
@@ -117,6 +118,16 @@ const LoginComponent = () => {
           </Link>
         </div>
       </div>
+    </>
+  );
+};
+
+const LoginComponent = () => {
+  return (
+    <>
+      <Suspense>
+        <Login />
+      </Suspense>
     </>
   );
 };

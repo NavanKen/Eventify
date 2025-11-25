@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, ReactNode } from "react";
+import { useMemo, useState, ReactNode, Suspense } from "react";
 import DashboardNavbar from "./navbar-layout";
 import DashboardLayoutSidebar from "./sidebar-layout";
 import {
@@ -31,7 +31,9 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
       <DashboardLayoutSidebar sidebarItems={sidebarItems} isOpen={isOpen} />
 
       <div className="flex flex-col w-full">
-        <DashboardNavbar toggleMenu={toggleMenu} />
+        <Suspense>
+          <DashboardNavbar toggleMenu={toggleMenu} />
+        </Suspense>
         <main className="p-8 overflow-y-auto">{children}</main>
       </div>
     </div>

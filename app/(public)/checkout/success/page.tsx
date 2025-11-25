@@ -15,8 +15,9 @@ import {
 import PublicLayout from "@/layout/public-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCheckoutSuccess } from "@/hooks/use-checkout-success";
+import { Suspense } from "react";
 
-export default function CheckoutSuccessPage() {
+const CheckoutSuccessComponents = () => {
   const {
     transactionData,
     isLoading,
@@ -286,10 +287,10 @@ export default function CheckoutSuccessPage() {
             transition={{ delay: 0.95, duration: 0.5 }}
           >
             <p className="text-blue-900 dark:text-blue-200 text-sm leading-relaxed">
-              <span className="font-semibold">📧 Penting:</span> Tiket Anda telah
-              dikirim ke email terdaftar. Silakan cek email Anda untuk menerima
-              QR code tiket. Anda juga dapat mengunduh tiket dari dashboard
-              kapan saja.
+              <span className="font-semibold">📧 Penting:</span> Tiket Anda
+              telah dikirim ke email terdaftar. Silakan cek email Anda untuk
+              menerima QR code tiket. Anda juga dapat mengunduh tiket dari
+              dashboard kapan saja.
             </p>
           </motion.div>
 
@@ -307,10 +308,7 @@ export default function CheckoutSuccessPage() {
               </Button>
             </Link>
             <Link href="/explore" className="flex-1">
-              <Button
-                variant="outline"
-                className="w-full gap-2 py-6 text-lg"
-              >
+              <Button variant="outline" className="w-full gap-2 py-6 text-lg">
                 <Home className="w-5 h-5" />
                 Jelajahi Event Lain
               </Button>
@@ -332,5 +330,15 @@ export default function CheckoutSuccessPage() {
         </div>
       </div>
     </PublicLayout>
+  );
+};
+
+export default function CheckoutSuccessPages() {
+  return (
+    <>
+      <Suspense>
+        <CheckoutSuccessComponents />
+      </Suspense>
+    </>
   );
 }

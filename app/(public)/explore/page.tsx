@@ -3,8 +3,9 @@
 import { useEffect } from "react";
 import ExploreContent from "@/components/explore/explore-content";
 import { useExplore } from "@/hooks/use-explore";
+import { Suspense } from "react";
 
-export default function ExplorePage() {
+const Explore = () => {
   const {
     events,
     categories,
@@ -55,5 +56,15 @@ export default function ExplorePage() {
         totalPages={totalPages}
       />
     </div>
+  );
+};
+
+export default function ExplorePage() {
+  return (
+    <>
+      <Suspense>
+        <Explore />
+      </Suspense>
+    </>
   );
 }

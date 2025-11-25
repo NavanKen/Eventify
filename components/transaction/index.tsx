@@ -1,11 +1,11 @@
 "use client";
 
 import { Filter, Search } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import OrderTable, { OrderStatusFilter } from "./order-table";
 import { useAuthContext } from "@/hooks/auth-context";
 
-const TransactionMember = () => {
+const TransactionMemberComponent = () => {
   const { user } = useAuthContext();
 
   const [search, setSearch] = useState<string>("");
@@ -88,6 +88,16 @@ const TransactionMember = () => {
         />
       )}
     </div>
+  );
+};
+
+const TransactionMember = () => {
+  return (
+    <>
+      <Suspense>
+        <TransactionMemberComponent />
+      </Suspense>
+    </>
   );
 };
 
