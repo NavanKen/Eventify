@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import { Suspense } from "react";
 import { Toaster } from "sonner";
 import "../style/globals.css";
 import { AuthProvider } from "@/hooks/auth-context";
@@ -35,10 +36,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${poppins.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          {children}
-          <Toaster position="bottom-right" richColors expand={false} />
-        </AuthProvider>
+        <Suspense fallback={null}>
+          <AuthProvider>
+            {children}
+            <Toaster position="bottom-right" richColors expand={false} />
+          </AuthProvider>
+        </Suspense>
       </body>
     </html>
   );
