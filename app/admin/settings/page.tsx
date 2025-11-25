@@ -6,7 +6,7 @@ import {
   deleteAccount,
 } from "@/service/profile.service";
 
-export default async function StaffSettingsPage() {
+export default async function AdminSettingsPage() {
   const res = await getCurrentProfile();
 
   const profile = res.status ? res.data?.profile : null;

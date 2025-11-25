@@ -12,7 +12,7 @@ const SIDEBAR_CUSTOMER = [
   {
     key: "Dashboard",
     label: "Dashboard",
-    href: "/customer/member",
+    href: "/customer",
     icon: <LayoutGrid className="w-5 h-5" />,
   },
   {

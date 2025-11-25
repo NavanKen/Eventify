@@ -4,10 +4,14 @@ import { useCallback, useEffect, useState } from "react";
 import {
   getTransactionDetail,
   getTicketPassByTransaction,
+  updateTransaction,
 } from "@/service/transaction.service";
 import { ITransaction, ITicketPass, IEvent, ITicket } from "@/types/global";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QRCodeSVG } from "qrcode.react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useAuthContext } from "@/hooks/auth-context";
 
 interface TransactionWithRelations extends ITransaction {
   event?: IEvent;
@@ -24,6 +28,11 @@ const TransactionDetailComponent = ({
   const [transaction, setTransaction] = useState<ITransaction | null>(null);
   const [ticketPasses, setTicketPasses] = useState<ITicketPass[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState<string>("pending");
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const { user } = useAuthContext();
+  const userRole = user?.role;
+  const canEditStatus = userRole === "admin" || userRole === "staff";
 
   const fetchData = useCallback(async () => {
     const res = await getTransactionDetail(transactionId);
@@ -44,6 +53,45 @@ const TransactionDetailComponent = ({
     };
     loadData();
   }, [fetchData]);
+
+  useEffect(() => {
+    if (transaction?.payment_status) {
+      setStatus(transaction.payment_status);
+    }
+  }, [transaction?.payment_status]);
+
+  const handleUpdateStatus = async () => {
+    if (!transaction) return;
+
+    if (!["pending", "completed", "cancelled"].includes(status)) {
+      toast.error("Status tidak valid");
+      return;
+    }
+
+    setIsUpdatingStatus(true);
+    try {
+      const res = await updateTransaction({
+        id: transaction.id,
+        payment_status: status,
+      } as ITransaction);
+
+      if (!res.status) {
+        toast.error(res.message || "Gagal mengubah status transaksi");
+        return;
+      }
+
+      toast.success(res.message || "Status transaksi berhasil diubah");
+      await fetchData();
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "Terjadi kesalahan saat mengubah status"
+      );
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -112,46 +160,72 @@ const TransactionDetailComponent = ({
         </div>
       </div>
 
-      <div className="bg-white dark:bg-neutral-900 rounded-lg border p-6">
-        <h2 className="text-xl font-semibold mb-4">Informasi Transaksi</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div>
-            <p className="text-sm text-gray-500">Order Code</p>
-            <p className="font-semibold">{transaction.order_code}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Ticket</p>
-            <p className="font-semibold">
-              {ticketData?.ticket_name} (Rp{" "}
-              {ticketData?.price?.toLocaleString("id-ID")}) x{" "}
-              {transaction.quantity}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Total</p>
-            <p className="font-semibold">
-              {formatPrice(transaction.total_price)}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Status</p>
-            <span
-              className={`px-2 py-1 rounded-md text-sm font-medium inline-block ${getStatusColor(
-                transaction.payment_status || "pending"
-              )}`}
-            >
-              {transaction.payment_status || "pending"}
-            </span>
-          </div>
+     <div className="bg-white dark:bg-neutral-900 rounded-lg border p-6">
+  <h2 className="text-xl font-semibold mb-4">Informasi Transaksi</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div>
+      <p className="text-sm text-gray-500 mb-1">Order Code</p>
+      <p className="font-semibold">{transaction.order_code}</p>
+    </div>
+    <div>
+      <p className="text-sm text-gray-500 mb-1">Ticket</p>
+      <p className="font-semibold">
+        {ticketData?.ticket_name} (Rp{" "}
+        {ticketData?.price?.toLocaleString("id-ID")}) x{" "}
+        {transaction.quantity}
+      </p>
+    </div>
+    <div>
+      <p className="text-sm text-gray-500 mb-1">Total</p>
+      <p className="font-semibold">
+        {formatPrice(transaction.total_price)}
+      </p>
+    </div>
+    <div>
+      <p className="text-sm text-gray-500 mb-1">Status</p>
+      {canEditStatus ? (
+        <div className="flex items-center gap-2">
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="flex-1 border border-gray-300 dark:border-neutral-700 rounded-md px-3 py-1.5 text-sm bg-white dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <Button
+            size="sm"
+            onClick={handleUpdateStatus}
+            disabled={
+              isUpdatingStatus ||
+              !transaction ||
+              status === (transaction.payment_status || "pending")
+            }
+            className="shrink-0"
+          >
+            {isUpdatingStatus ? "..." : "Simpan"}
+          </Button>
         </div>
-      </div>
+      ) : (
+        <span
+          className={`inline-block px-3 py-1 rounded-md text-sm font-medium ${getStatusColor(
+            transaction.payment_status || "pending"
+          )}`}
+        >
+          {transaction.payment_status || "pending"}
+        </span>
+      )}
+    </div>
+  </div>
+</div>
 
       <div className="bg-white dark:bg-neutral-900 rounded-lg border p-6">
         <h2 className="text-xl font-semibold mb-4">Detail Event</h2>
         <div className="space-y-3">
           <div>
             <p className="text-sm text-gray-500">Event</p>
-            <p className="font-semibold text-lg text-pink-600">
+            <p className="font-bold text-primary text-lg text-pink-600">
               {eventData?.title}
             </p>
           </div>

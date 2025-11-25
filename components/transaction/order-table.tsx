@@ -30,6 +30,8 @@ interface IOrders {
   status: OrderStatus | string;
   created_at: string | Date | null;
   total_amount: number;
+  event_title?: string | null;
+  ticket_name?: string | null;
 }
 
 interface OrderTableProps {
@@ -59,6 +61,8 @@ const OrderTable = ({
   type TransactionRow = ITransaction & {
     id: string;
     created_at: string | Date;
+    event?: { title?: string | null };
+    ticket?: { ticket_name?: string | null };
   };
 
   const getStatusIcon = (status: string) => {
@@ -105,6 +109,8 @@ const OrderTable = ({
         status: (row.payment_status as OrderStatus) ?? "pending",
         created_at: row.created_at ?? null,
         total_amount: row.total_price,
+        event_title: row.event?.title ?? null,
+        ticket_name: row.ticket?.ticket_name ?? null,
       }));
 
       setOrders(mappedOrders);
@@ -213,15 +219,15 @@ const OrderTable = ({
       <div>
         {orders.length === 0 ? (
           <div className="text-center py-16 px-4">
-            <div className="w-20 h-20 bg-linear-to-br from-orange-100 to-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Package className="w-10 h-10 text-orange-600" />
+            <div className="w-20 h-20 bg-linear-to-br from-primary/10 to-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Package className="w-10 h-10 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <h3 className="text-xl font-semibold text-[var(--text-dark)] mb-2">
               {search || statusFilter !== "all"
                 ? "Tidak Ada Pesanan Ditemukan"
                 : "Belum Ada Pesanan"}
             </h3>
-            <p className="text-gray-500">
+            <p className="text-[var(--text-light)]">
               {search || statusFilter !== "all"
                 ? "Coba ubah kata kunci pencarian atau filter status"
                 : "Riwayat pesanan Anda akan muncul di sini"}
@@ -233,20 +239,20 @@ const OrderTable = ({
               <div
                 key={order.id}
                 onClick={() => router.push(`/customer/transaction/${order.id}`)}
-                className="group bg-white rounded-2xl shadow-sm hover:shadow-md border border-gray-100 hover:border-orange-200 transition-all duration-300 cursor-pointer overflow-hidden"
+                className="group bg-[var(--background)] rounded-[var(--radius)] shadow-sm hover:shadow-md border border-border hover:border-primary/60 transition-all duration-300 cursor-pointer overflow-hidden"
               >
                 <div
                   className={`bg-linear-to-br ${getStatusGradient(
                     order.status
-                  )} p-4 border-b border-gray-100`}
+                  )} p-4 border-b border-border`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+                      <div className="w-10 h-10 bg-[var(--background)] rounded-full flex items-center justify-center shadow-sm">
                         {getStatusIcon(order.status)}
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900 text-sm">
+                        <p className="font-semibold text-[var(--text-dark)] text-sm">
                           #{String(order.order_code)}
                         </p>
                         <span
@@ -258,13 +264,24 @@ const OrderTable = ({
                         </span>
                       </div>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-orange-600 group-hover:translate-x-1 transition-all" />
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                   </div>
                 </div>
 
                 <div className="p-4 space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Calendar className="w-4 h-4 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-semibold text-[var(--text-dark)] line-clamp-1">
+                      {order.event_title || "Event tidak tersedia"}
+                    </p>
+                    {order.ticket_name && (
+                      <p className="text-xs text-[var(--text-light)] mt-1">
+                        Tiket: {order.ticket_name}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs text-[var(--text-light)]">
+                    <Calendar className="w-4 h-4 text-[var(--text-light)]" />
                     <span>
                       {new Date(order.created_at || "").toLocaleDateString(
                         "id-ID",
@@ -285,12 +302,12 @@ const OrderTable = ({
                     </span>
                   </div>
 
-                  <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-600">
+                  <div className="pt-3 border-t border-border flex items-center justify-between">
+                    <span className="text-sm font-medium text-[var(--text-light)]">
                       Total Pembayaran
                     </span>
                     <div className="text-right">
-                      <p className="text-xl font-bold text-orange-600">
+                      <p className="text-xl font-bold text-primary">
                         Rp {order.total_amount.toLocaleString("id-ID")}
                       </p>
                     </div>
@@ -335,7 +352,7 @@ const OrderTable = ({
                     onClick={() => onPageChange(pageNum)}
                     className={`w-10 h-10 rounded-xl font-medium text-sm transition-all ${
                       page === pageNum
-                        ? "bg-linear-to-br from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/30"
+                        ? "bg-linear-to-br from-primary to-primary/75 text-white shadow-lg"
                         : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
                     }`}
                   >

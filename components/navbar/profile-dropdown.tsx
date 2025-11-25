@@ -49,7 +49,6 @@ export default function ProfileDropdown({
         </motion.div>
       </button>
 
-      {/* Dropdown Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -59,7 +58,7 @@ export default function ProfileDropdown({
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
           >
-            {/* User Info Card */}
+       
             <div className="p-3 border-b border-gray-200 dark:border-gray-700">
               <p className="text-sm font-medium text-gray-900 dark:text-white">
                 {user.name}
@@ -69,9 +68,8 @@ export default function ProfileDropdown({
               </p>
             </div>
 
-            {/* Menu Items */}
             <div className="p-2 space-y-1">
-              {/* Admin/Staff Dashboard */}
+           
               {(user.role === "admin" || user.role === "staff") && (
                 <button
                   onClick={onDashboardClick}
@@ -82,10 +80,9 @@ export default function ProfileDropdown({
                 </button>
               )}
 
-              {/* Customer Dashboard */}
               {user.role === "customer" && (
                 <Link
-                  href="/dashboard"
+                  href="/customer"
                   onClick={onToggle}
                   className="w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors block"
                 >

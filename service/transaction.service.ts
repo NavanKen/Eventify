@@ -13,12 +13,17 @@ export const getTransactionService = async ({
 }: IGetDataParams & { role?: string; userId?: string; paymentStatus?: string }) => {
   try {
     let query = supabase
-      .from("transaction")
+      .from("transaction_search_view")
       .select(
         "*, event(title), ticket(ticket_name, price), users(name, role)",
         { count: "exact" }
-      )
-      .ilike("order_code", `%${search}%`);
+      );
+
+    if (search) {
+     query = query.or(
+        `order_code.ilike.%${search}%,event_title.ilike.%${search}%,ticket_name.ilike.%${search}%,user_name.ilike.%${search}%`
+      );
+    }
 
     if ((role === "staff" || role === "customer") && userId) {
       query = query.eq("user_id", userId);
@@ -33,6 +38,8 @@ export const getTransactionService = async ({
       .range(offset, offset + limit - 1);
 
     const { data, error, count } = await query;
+
+    console.log("data",data)
 
     if (error) {
       return { status: false, error };
@@ -117,7 +124,6 @@ export const createTransaction = async (payload: ITransaction) => {
 
     const user_id = user.data?.auth.id;
 
-    // 1) Check ticket availability first
     const { data: ticketRow, error: ticketError } = await supabase
       .from("ticket")
       .select("id, quota, sold")
@@ -139,7 +145,7 @@ export const createTransaction = async (payload: ITransaction) => {
       };
     }
 
-    // 2) Create transaction
+  
     const { data, error } = await supabase
       .from("transaction")
       .insert({
@@ -180,7 +186,6 @@ export const createTransaction = async (payload: ITransaction) => {
         };
       }
 
-      // 3) Increment sold after successful ticket_pass creation
       const newSold = (ticketRow.sold || 0) + quantity;
       const { error: updateSoldError } = await supabase
         .from("ticket")
@@ -232,7 +237,6 @@ export const createOnlineTransaction = async (payload: ITransaction) => {
     const user_id = user.data?.auth.id;
     const customer_name = user.data?.profile.name;
 
-    // 1) Check ticket availability first
     const { data: ticketRow, error: ticketError } = await supabase
       .from("ticket")
       .select("id, quota, sold")
@@ -254,7 +258,7 @@ export const createOnlineTransaction = async (payload: ITransaction) => {
       };
     }
 
-    // 2) Create transaction
+
     const { data, error } = await supabase
       .from("transaction")
       .insert({
@@ -295,7 +299,6 @@ export const createOnlineTransaction = async (payload: ITransaction) => {
         };
       }
 
-      // 3) Increment sold after successful ticket_pass creation
       const newSold = (ticketRow.sold || 0) + quantity;
       const { error: updateSoldError } = await supabase
         .from("ticket")
@@ -327,6 +330,24 @@ export const createOnlineTransaction = async (payload: ITransaction) => {
 export const updateTransaction = async (payload: ITransaction) => {
   try {
     const { id, payment_status } = payload;
+
+    const user = await GetUserService();
+
+    if (!user.status || !user.data?.profile?.role) {
+      return {
+        status: false,
+        message: user.message || "Tidak dapat memuat data pengguna",
+      };
+    }
+
+    const role = user.data.profile.role;
+
+    if (role !== "admin" && role !== "staff") {
+      return {
+        status: false,
+        message: "Anda tidak memiliki izin untuk mengubah status transaksi",
+      };
+    }
 
     const { error } = await supabase
       .from("transaction")
