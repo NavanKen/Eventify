@@ -3,11 +3,15 @@
 import { useMemo, useState, ReactNode } from "react";
 import DashboardNavbar from "./navbar-layout";
 import DashboardLayoutSidebar from "./sidebar-layout";
-import { SIDEBAR_ADMIN, SIDEBAR_STAFF } from "@/constant/dashboard.constant";
+import {
+  SIDEBAR_ADMIN,
+  SIDEBAR_CUSTOMER,
+  SIDEBAR_STAFF,
+} from "@/constant/dashboard.constant";
 
 type DashboardLayoutProps = {
   children: ReactNode;
-  type: "admin" | "staff";
+  type: "admin" | "staff" | "customers";
 };
 
 const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
@@ -18,6 +22,7 @@ const DashboardLayout = ({ children, type }: DashboardLayoutProps) => {
   const sidebarItems = useMemo(() => {
     if (type === "staff") return SIDEBAR_STAFF;
     if (type === "admin") return SIDEBAR_ADMIN;
+    if (type === "customers") return SIDEBAR_CUSTOMER;
     return [];
   }, [type]);
 

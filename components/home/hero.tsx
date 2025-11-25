@@ -166,8 +166,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-white to-gray-50">
-      {/* Background Decorative Icons */}
+    <div className="w-full h-screen flex items-center justify-center relative overflow-hidden bg-linear-to-b from-white to-gray-50">
       <div className="absolute inset-0 pointer-events-none">
         {decorativeIcons.map((item, index) => (
           <motion.div
