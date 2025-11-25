@@ -35,19 +35,17 @@ export const getCategoryService = async ({
   }
 };
 
-// Get random categories for landing page (max 8)
 export const getRandomCategories = async (limit: number = 8) => {
   try {
     const { data, error } = await supabase
       .from("category")
       .select("*")
-      .limit(limit * 2); // Ambil lebih banyak untuk shuffle
+      .limit(limit * 2);
 
     if (error) {
       return { status: false, error };
     }
 
-    // Shuffle array untuk random order
     const shuffled = data?.sort(() => Math.random() - 0.5) || [];
     return { status: true, data: shuffled.slice(0, limit) };
   } catch (err) {

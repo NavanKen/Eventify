@@ -88,7 +88,9 @@ export const InfoTab = ({ event, onUpdate }: InfoTabProps) => {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-4">Event Information</h3>
-        <p className="text-sm text-gray-500 mb-6">Manage information of this event</p>
+        <p className="text-sm text-gray-500 mb-6">
+          Manage information of this event
+        </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-2">
@@ -101,17 +103,6 @@ export const InfoTab = ({ event, onUpdate }: InfoTabProps) => {
               placeholder="Event name"
               className="py-5"
               required
-            />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="slug">Slug</Label>
-            <Input
-              {...register("title")}
-              id="slug"
-              placeholder="event-slug"
-              className="py-5"
-              disabled
             />
           </div>
 
@@ -150,7 +141,10 @@ export const InfoTab = ({ event, onUpdate }: InfoTabProps) => {
                     <ChevronDownIcon className="w-4 h-4" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
+                >
                   <Calendar
                     mode="single"
                     selected={startDate}
@@ -178,7 +172,10 @@ export const InfoTab = ({ event, onUpdate }: InfoTabProps) => {
                     <ChevronDownIcon className="w-4 h-4" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
+                >
                   <Calendar
                     mode="single"
                     selected={endDate}
