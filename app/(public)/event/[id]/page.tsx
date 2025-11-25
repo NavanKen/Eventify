@@ -10,6 +10,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useEventDetail } from "@/hooks/use-event-detail";
 import { createOnlineTransaction } from "@/service/transaction.service";
+import { useAuthContext } from "@/hooks/auth-context";
 
 export default function EventDetailPage() {
   const {
@@ -25,6 +26,8 @@ export default function EventDetailPage() {
   } = useEventDetail();
 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const { user } = useAuthContext();
+  const isLoggedIn = !!user?.id;
 
   const handleCheckout = async () => {
     if (!selectedTicket) {
@@ -355,20 +358,37 @@ export default function EventDetailPage() {
                   </div>
                 </div>
 
-                <Button
-                  onClick={handleCheckout}
-                  disabled={isCheckingOut || !selectedTicket || quantity < 1}
-                  className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed gap-2"
-                >
-                  {isCheckingOut ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    "Checkout"
-                  )}
-                </Button>
+                {isLoggedIn ? (
+                  <Button
+                    onClick={handleCheckout}
+                    disabled={
+                      isCheckingOut || !selectedTicket || quantity < 1
+                    }
+                    className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed gap-2"
+                  >
+                    {isCheckingOut ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      "Checkout"
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    asChild
+                    className="w-full bg-primary hover:bg-primary/90 gap-2"
+                  >
+                    <Link
+                      href={`/auth/login?callbackUrl=${encodeURIComponent(
+                        `/event/${event.id}`
+                      )}`}
+                    >
+                      Login untuk booking tiket
+                    </Link>
+                  </Button>
+                )}
               </>
             ) : (
               <p className="text-gray-500 text-center py-8">

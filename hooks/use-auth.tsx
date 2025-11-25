@@ -87,7 +87,7 @@ export const useAuth = () => {
       const role = user.data?.profile.role;
 
       if (callbackUrl) {
-        router.push(callbackUrl);
+        window.location.href = callbackUrl;
         return;
       }
 

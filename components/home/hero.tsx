@@ -233,14 +233,14 @@ const Hero: React.FC = () => {
             variants={contentVariants}
             className="w-full max-w-2xl mt-4"
           >
-            <div className="flex items-center h-14 rounded-full shadow-lg shadow-primary/20 border border-gray-200 bg-white overflow-hidden">
-              <div className="flex items-center justify-center pl-6 text-gray-500">
+           <div className="flex items-center h-14 rounded-full shadow-lg shadow-primary/20 border border-gray-200 bg-white overflow-hidden">
+              <div className="flex items-center justify-center pl-4 sm:pl-6 text-gray-500">
                 <Search className="w-5 h-5" />
               </div>
 
               <input
                 type="text"
-                className="flex-1 h-full px-4 text-base text-gray-900 placeholder:text-gray-400 bg-transparent outline-none"
+                className="flex-1 h-full px-2 sm:px-4 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 bg-transparent outline-none"
                 placeholder="Search events, artists, or venues..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -252,9 +252,9 @@ const Hero: React.FC = () => {
                 }}
               />
 
-              <div className="pr-2.5">
+              <div className="pr-2">
                 <button
-                  className="min-w-[84px] h-11 px-6 rounded-full bg-primary text-white text-base font-bold tracking-wide hover:bg-primary/85 transition-colors"
+                  className="h-10 px-4 sm:px-6 rounded-full bg-primary text-white text-sm sm:text-base font-bold tracking-wide hover:bg-primary/85 transition-colors whitespace-nowrap"
                   onClick={handleSearch}
                 >
                   Search
