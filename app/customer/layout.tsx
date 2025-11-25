@@ -1,11 +1,11 @@
-import StaffLayout from "@/layout/staff-layout";
+import CustomerLayout from "@/layout/customer-layout";
 
 const RootCustomerLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return <StaffLayout>{children}</StaffLayout>;
+  return <CustomerLayout>{children}</CustomerLayout>;
 };
 
 export default RootCustomerLayout;

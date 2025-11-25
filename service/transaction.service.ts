@@ -7,15 +7,28 @@ export const getTransactionService = async ({
   search = "",
   limit = 10,
   offset = 0,
-}: IGetDataParams) => {
+  role,
+  userId,
+  paymentStatus,
+}: IGetDataParams & { role?: string; userId?: string; paymentStatus?: string }) => {
   try {
-    const query = supabase
+    let query = supabase
       .from("transaction")
       .select(
         "*, event(title), ticket(ticket_name, price), users(name, role)",
         { count: "exact" }
       )
-      .ilike("order_code", `%${search}%`)
+      .ilike("order_code", `%${search}%`);
+
+    if ((role === "staff" || role === "customer") && userId) {
+      query = query.eq("user_id", userId);
+    }
+
+    if (paymentStatus && paymentStatus !== "all") {
+      query = query.eq("payment_status", paymentStatus);
+    }
+
+    query = query
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 

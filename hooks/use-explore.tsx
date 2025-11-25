@@ -27,7 +27,7 @@ export const useExplore = () => {
   const [events, setEvents] = useState<IEvent[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() => searchParams.get("search") || "");
   const [selectedCategory, setSelectedCategory] = useState(
     searchParams.get("category") || ""
   );

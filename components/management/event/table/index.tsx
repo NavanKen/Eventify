@@ -22,6 +22,7 @@ import Image from "next/image";
 import DeleteDialog from "../dialog/delete-dialog";
 import { Eye } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface DataTableProps {
   events: IEvent[];
@@ -45,6 +46,8 @@ const DataTable = ({
   onDelete,
 }: DataTableProps) => {
   const totalPages = Math.ceil(total / limit);
+  const pathname = usePathname();
+  const basePath = pathname.startsWith("/staff") ? "/staff" : "/admin";
 
   return (
     <>
@@ -127,7 +130,7 @@ const DataTable = ({
                   </TableCell>
                   <TableCell className="py-3">
                     <div className="flex gap-3">
-                      <Link href={`/admin/event/${event.id}`}>
+                      <Link href={`${basePath}/event/${event.id}`}>
                         <Eye className="text-blue-500 w-5 h-5 cursor-pointer" />
                       </Link>
                       <DeleteDialog

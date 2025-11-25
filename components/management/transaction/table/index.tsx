@@ -27,6 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import DeleteDialog from "../dialog/delete-dialog";
 import { Eye } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface DataTableProps {
   transactions: ITransaction[];
@@ -50,6 +51,8 @@ const DataTable = ({
   onDelete,
 }: DataTableProps) => {
   const totalPages = Math.ceil(total / limit);
+  const pathname = usePathname();
+  const basePath = pathname.startsWith("/staff") ? "/staff" : "/admin";
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -161,7 +164,7 @@ const DataTable = ({
                   </TableCell>
                   <TableCell className="py-3">
                     <div className="flex gap-3">
-                      <Link href={`/admin/transaction/${transaction.id}`}>
+                      <Link href={`${basePath}/transaction/${transaction.id}`}>
                         <Eye className="text-blue-500 w-5 h-5 cursor-pointer" />
                       </Link>
                       <DeleteDialog id={transaction.id} onDelete={onDelete!} />

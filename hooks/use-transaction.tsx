@@ -9,6 +9,7 @@ import {
 } from "@/service/transaction.service";
 import { ITransaction } from "@/types/global";
 import { toast } from "sonner";
+import { useAuthContext } from "@/hooks/auth-context";
 
 export const useTransaction = (
   search?: string,
@@ -21,17 +22,27 @@ export const useTransaction = (
   const [isLoading, setIsLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
   const [isCreate, setIsCreate] = useState(false);
+  const { user } = useAuthContext();
+
+  const role = user?.role;
+  const userId = user?.id;
 
   const fetchTransactions = useCallback(async () => {
     const offset = (page! - 1) * limit!;
-    const res = await getTransactionService({ search, limit, offset });
+    const res = await getTransactionService({
+      search,
+      limit,
+      offset,
+      role,
+      userId,
+    });
 
     if (res.status && res.data) {
       setTransactions(res.data);
       setTotal(res.count ?? 0);
     }
     setIsLoading(false);
-  }, [search, limit, page]);
+  }, [search, limit, page, role, userId]);
 
   useEffect(() => {
     const loadData = async () => {

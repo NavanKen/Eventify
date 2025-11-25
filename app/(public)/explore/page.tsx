@@ -20,7 +20,6 @@ export default function ExplorePage() {
     totalPages,
   } = useExplore();
 
-  // Debug logging
   useEffect(() => {
     console.log("Debug Info:", {
       eventsCount: events.length,

@@ -11,6 +11,8 @@ import {
   Clock,
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface DecorativeIcon {
   top?: string;
@@ -25,6 +27,19 @@ interface DecorativeIcon {
 }
 
 const Hero: React.FC = () => {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+
+  const handleSearch = () => {
+    const trimmed = query.trim();
+
+    if (!trimmed) {
+      router.push("/explore");
+      return;
+    }
+
+    router.push(`/explore?search=${encodeURIComponent(trimmed)}`);
+  };
   const ticketVariants: Variants = {
     hidden: { opacity: 0, scale: 0 },
     visible: (i: number) => ({
@@ -227,10 +242,21 @@ const Hero: React.FC = () => {
                 type="text"
                 className="flex-1 h-full px-4 text-base text-gray-900 placeholder:text-gray-400 bg-transparent outline-none"
                 placeholder="Search events, artists, or venues..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearch();
+                  }
+                }}
               />
 
               <div className="pr-2.5">
-                <button className="min-w-[84px] h-11 px-6 rounded-full bg-primary text-white text-base font-bold tracking-wide hover:bg-blue-500/8 transition-colors">
+                <button
+                  className="min-w-[84px] h-11 px-6 rounded-full bg-primary text-white text-base font-bold tracking-wide hover:bg-primary/85 transition-colors"
+                  onClick={handleSearch}
+                >
                   Search
                 </button>
               </div>
