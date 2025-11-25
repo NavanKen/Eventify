@@ -73,6 +73,7 @@ const DataTable = ({
               <TableHead className="py-5">DESCRIPTION</TableHead>
               <TableHead className="py-5">PRICE</TableHead>
               <TableHead className="py-5">QUANTITY</TableHead>
+              <TableHead className="py-5">SOLD</TableHead>
               <TableHead className="py-5 w-[100px]">ACTIONS</TableHead>
             </TableRow>
           </TableHeader>
@@ -110,9 +111,14 @@ const DataTable = ({
                   className="bg-neutral-50 dark:bg-neutral-900"
                 >
                   <TableCell className="py-3">{ticket.ticket_name}</TableCell>
-                  <TableCell className="py-3">{ticket.description || "-"}</TableCell>
-                  <TableCell className="py-3">{formatPrice(ticket.price)}</TableCell>
+                  <TableCell className="py-3">
+                    {ticket.description || "-"}
+                  </TableCell>
+                  <TableCell className="py-3">
+                    {formatPrice(ticket.price)}
+                  </TableCell>
                   <TableCell className="py-3">{ticket.quota}</TableCell>
+                  <TableCell className="py-3">{ticket.sold}</TableCell>
                   <TableCell className="py-3">
                     <div className="flex gap-3">
                       <EditDialog
@@ -121,7 +127,9 @@ const DataTable = ({
                         onSubmit={onEditSubmit}
                         isLoading={isEdit}
                         open={editOpenId === ticket.id}
-                        onOpenChange={(open) => onEditOpenChange(open, ticket.id)}
+                        onOpenChange={(open) =>
+                          onEditOpenChange(open, ticket.id)
+                        }
                       />
                       <DeleteDialog id={ticket.id} onDelete={onDelete!} />
                     </div>
