@@ -91,8 +91,17 @@ export const useAuth = () => {
       //   return;
       // }
 
+      await getProfile();
+
       if (callbackUrl) {
-        const url = new URL(callbackUrl);
+        let url;
+
+        try {
+          url = new URL(callbackUrl, window.location.origin);
+        } catch {
+          toast.error("Link callback tidak valid");
+          return;
+        }
 
         const path = url.pathname;
 
@@ -101,11 +110,10 @@ export const useAuth = () => {
         } else if (path.startsWith("/staff") && role !== "staff") {
           toast.error("Anda tidak memiliki akses ke halaman ini");
         } else {
-          window.location.href = callbackUrl;
+          window.location.href = url.toString();
           return;
         }
       }
-      await getProfile();
 
       switch (role) {
         case "admin":
