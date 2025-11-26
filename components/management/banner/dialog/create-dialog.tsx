@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ImageIcon, Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { Loader2, Plus, Trash2, Upload } from "lucide-react";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { UseFormReturn } from "react-hook-form";
@@ -94,12 +94,13 @@ const CreateDialog = ({
                 <Label>Gambar Banner</Label>
                 <div className="relative">
                   {preview ? (
-                    <div className="relative w-full h-64 rounded-md border-2 border-dashed overflow-hidden">
+                    <>
+                      {/* <div className="relative w-full h-64 rounded-md border-2 border-dashed overflow-hidden"> */}
                       <Image
                         src={preview}
                         alt="Preview"
                         fill
-                        className="object-cover"
+                        className="!relative"
                       />
                       <button
                         type="button"
@@ -108,19 +109,24 @@ const CreateDialog = ({
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
-                    </div>
+                      {/* </div> */}
+                    </>
                   ) : (
                     <label className="w-full h-64 flex flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 cursor-pointer hover:border-gray-400 transition">
                       <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <Upload className="w-10 h-10 text-gray-400 mb-2" />
                         <p className="text-sm text-gray-500">
-                          <span className="font-semibold">Click to upload file here</span>
+                          <span className="font-semibold">
+                            Click to upload file here
+                          </span>
                         </p>
                       </div>
                       <Input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => onImageChange(e.target.files?.[0] ?? null)}
+                        onChange={(e) =>
+                          onImageChange(e.target.files?.[0] ?? null)
+                        }
                         className="hidden"
                       />
                     </label>

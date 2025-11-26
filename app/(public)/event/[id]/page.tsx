@@ -162,7 +162,7 @@ export default function EventDetailPage() {
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <motion.div
-            className="relative h-72 sm:h-80 md:h-96 rounded-lg overflow-hidden mb-6"
+            className="relative rounded-lg overflow-hidden mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -171,7 +171,7 @@ export default function EventDetailPage() {
               src={event.banner_image || "/image/placeholder.png"}
               alt={event.title}
               fill
-              className="object-cover"
+              className="!relative"
             />
             <div className="absolute inset-0 bg-black/30" />
           </motion.div>

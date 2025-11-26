@@ -3,12 +3,11 @@
 import { IEvent } from "@/types/global";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Trash2, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { uploadFile } from "@/lib/helper/upload-file";
-import { environment } from "@/lib/config/env";
 import { toast } from "sonner";
 
 interface CoverTabProps {
@@ -17,7 +16,9 @@ interface CoverTabProps {
 }
 
 export const CoverTab = ({ event, onUpdate }: CoverTabProps) => {
-  const [preview, setPreview] = useState<string | null>(event.banner_image || null);
+  const [preview, setPreview] = useState<string | null>(
+    event.banner_image || null
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const handleImageChange = async (file: File | null) => {
@@ -31,7 +32,9 @@ export const CoverTab = ({ event, onUpdate }: CoverTabProps) => {
   };
 
   const handleSave = async () => {
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
     const file = fileInput?.files?.[0];
 
     if (!file && !preview) {
@@ -76,15 +79,15 @@ export const CoverTab = ({ event, onUpdate }: CoverTabProps) => {
         <div className="mb-6">
           <h4 className="font-medium mb-3">Current Cover</h4>
           {preview ? (
-            <div className="relative w-full h-64 rounded-lg overflow-hidden border">
-              <Image
-                src={preview}
-                alt="Cover"
-                fill
-                className="object-cover"
-              />
-            </div>
+            // <div className="relative w-full h-64 rounded-lg overflow-hidden border">
+            <Image
+              src={preview}
+              alt="Cover"
+              fill
+              className="!relative rounded-2xl"
+            />
           ) : (
+            // </div>
             <div className="w-full h-64 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
               <p className="text-gray-500">No cover image</p>
             </div>
@@ -97,7 +100,9 @@ export const CoverTab = ({ event, onUpdate }: CoverTabProps) => {
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <Upload className="w-10 h-10 text-gray-400 mb-2" />
               <p className="text-sm text-gray-500">
-                <span className="font-semibold">Drag and drop or click to upload file here</span>
+                <span className="font-semibold">
+                  Drag and drop or click to upload file here
+                </span>
               </p>
             </div>
             <Input
@@ -109,11 +114,7 @@ export const CoverTab = ({ event, onUpdate }: CoverTabProps) => {
           </label>
         </div>
 
-        <Button
-          onClick={handleSave}
-          disabled={isLoading}
-          className="w-full"
-        >
+        <Button onClick={handleSave} disabled={isLoading} className="w-full">
           {isLoading ? "Saving..." : "Save Changes"}
         </Button>
       </div>

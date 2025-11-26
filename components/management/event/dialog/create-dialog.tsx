@@ -215,7 +215,7 @@ const CreateDialog = ({
                         src={preview}
                         alt="Preview"
                         fill
-                        className="object-cover"
+                        className="object-contain"
                       />
                       <button
                         type="button"

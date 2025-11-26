@@ -113,18 +113,20 @@ const DataTable = ({
                     <Image
                       src={banner.image_url!}
                       alt={banner.title}
-                      width={40}
-                      height={40}
+                      width={300}
+                      height={200}
                       className="rounded-md object-cover"
                     />
                   </TableCell>
                   <TableCell className="py-3">{banner.title}</TableCell>
                   <TableCell className="py-3">
-                    <span className={`px-2 py-1 rounded-md text-sm font-medium ${
-                      banner.status 
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" 
-                        : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-md text-sm font-medium ${
+                        banner.status
+                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                          : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+                      }`}
+                    >
                       {banner.status ? "Aktif" : "Tidak Aktif"}
                     </span>
                   </TableCell>
@@ -138,9 +140,15 @@ const DataTable = ({
                         preview={editPreview}
                         isLoading={isEdit}
                         open={editOpenId === banner.id}
-                        onOpenChange={(open) => onEditOpenChange(open, banner.id)}
+                        onOpenChange={(open) =>
+                          onEditOpenChange(open, banner.id)
+                        }
                       />
-                      <DeleteDialog id={banner.id} onDelete={onDelete!} imageUrl={banner.image_url} />
+                      <DeleteDialog
+                        id={banner.id}
+                        onDelete={onDelete!}
+                        imageUrl={banner.image_url}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

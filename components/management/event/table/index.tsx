@@ -107,8 +107,8 @@ const DataTable = ({
                       <Image
                         src={event.banner_image}
                         alt={event.title}
-                        width={40}
-                        height={40}
+                        width={100}
+                        height={100}
                         className="rounded-md object-cover"
                       />
                     ) : (
@@ -125,7 +125,9 @@ const DataTable = ({
                           : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                       }`}
                     >
-                      {event.status === "published" ? "Published" : "Unpublished"}
+                      {event.status === "published"
+                        ? "Published"
+                        : "Unpublished"}
                     </span>
                   </TableCell>
                   <TableCell className="py-3">
