@@ -23,7 +23,8 @@ const DashboardLayoutSidebar = ({
 }: DashboardLayoutSidebarProps) => {
   const pathname = usePathname();
 
-  const isActive = (href: string) => pathname === href;
+  // const isActive = (href: string) => pathname === href;
+  const isActive = (href: string) => pathname.startsWith(href);
 
   return (
     <div

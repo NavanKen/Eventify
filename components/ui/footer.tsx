@@ -29,11 +29,11 @@ const Footer = () => {
             </h1>
             <p className="text-slate-600 text-sm leading-relaxed mb-6 max-w-md">
               Eventify adalah platform yang membantu kamu menemukan berbagai
-              acara menarik dengan mudah. Kamu dapat menjelajahi event terbaru
-              mulai dari konser, workshop, hingga kegiatan lokal. Proses
-              pembelian tiket dibuat sederhana dan aman untuk memastikan
-              pengalaman yang nyaman. Nikmati kemudahan menemukan dan mengikuti
-              acara favoritmu dalam satu tempat.
+              acara menarik dengan mudah. Kamu dapat menjelajahi mulai dari
+              konser, workshop, hingga kegiatan lokal. Proses pembelian tiket
+              dibuat sederhana dan aman untuk memastikan pengalaman yang nyaman.
+              Nikmati kemudahan menemukan dan mengikuti acara favoritmu dalam
+              satu tempat.
             </p>
           </div>
 
