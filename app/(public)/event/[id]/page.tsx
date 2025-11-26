@@ -74,7 +74,7 @@ export default function EventDetailPage() {
         return;
       }
 
-      toast.success("Pembelian tiket berhasil! 🎉");
+      toast.success("Pembelian tiket berhasil!");
 
       setTimeout(() => {
         window.location.href = `/checkout/success?order=${res.data?.order_code}`;
@@ -249,7 +249,9 @@ export default function EventDetailPage() {
                   >
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h3 className="font-bold text-lg">{ticket.ticket_name}</h3>
+                        <h3 className="font-bold text-lg">
+                          {ticket.ticket_name}
+                        </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           {ticket.description}
                         </p>
@@ -288,25 +290,37 @@ export default function EventDetailPage() {
                 <div className="space-y-4 mb-6">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Selected Ticket</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Selected Ticket
+                      </p>
                       <p className="font-semibold">
-                        {selectedTicketData ? selectedTicketData.ticket_name : "Pilih tiket dari daftar"}
+                        {selectedTicketData
+                          ? selectedTicketData.ticket_name
+                          : "Pilih tiket dari daftar"}
                       </p>
                     </div>
                     <div className="font-semibold text-primary">
-                      {selectedTicketData ? `Rp ${selectedTicketData.price.toLocaleString("id-ID")}` : "-"}
+                      {selectedTicketData
+                        ? `Rp ${selectedTicketData.price.toLocaleString(
+                            "id-ID"
+                          )}`
+                        : "-"}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Quantity</label>
+                    <label className="block text-sm font-medium mb-2">
+                      Quantity
+                    </label>
                     <div className="flex items-center gap-3">
                       {(() => {
                         const availableQty = Math.max(
                           0,
-                          (selectedTicketData?.quota || 0) - (selectedTicketData?.sold || 0)
+                          (selectedTicketData?.quota || 0) -
+                            (selectedTicketData?.sold || 0)
                         );
-                        const canInteract = !!selectedTicket && availableQty > 0;
+                        const canInteract =
+                          !!selectedTicket && availableQty > 0;
                         return (
                           <>
                             <button
@@ -321,14 +335,20 @@ export default function EventDetailPage() {
                             >
                               -
                             </button>
-                            <div className="min-w-[2rem] text-center font-semibold">{quantity}</div>
+                            <div className="min-w-[2rem] text-center font-semibold">
+                              {quantity}
+                            </div>
                             <button
                               type="button"
                               onClick={() => {
                                 if (!canInteract) return;
-                                setQuantity(Math.min(availableQty, quantity + 1));
+                                setQuantity(
+                                  Math.min(availableQty, quantity + 1)
+                                );
                               }}
-                              disabled={!canInteract || quantity >= availableQty}
+                              disabled={
+                                !canInteract || quantity >= availableQty
+                              }
                               className="h-9 w-9 rounded-full border flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50"
                               aria-label="Tambah jumlah"
                             >
@@ -361,9 +381,7 @@ export default function EventDetailPage() {
                 {isLoggedIn ? (
                   <Button
                     onClick={handleCheckout}
-                    disabled={
-                      isCheckingOut || !selectedTicket || quantity < 1
-                    }
+                    disabled={isCheckingOut || !selectedTicket || quantity < 1}
                     className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed gap-2"
                   >
                     {isCheckingOut ? (

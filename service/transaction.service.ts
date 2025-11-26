@@ -429,7 +429,7 @@ export const deleteTransaction = async (id: string) => {
 
     return {
       status: true,
-      pesan: "Berhasil Menghapus Transaksi & Mengembalikan Sold",
+      pesan: "Berhasil Menghapus Transaksi",
     };
   } catch (err) {
     return {
