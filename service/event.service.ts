@@ -4,7 +4,6 @@ import { uploadFile } from "@/lib/helper/upload-file";
 import { IGetDataParams } from "@/types/global";
 import { environment } from "@/lib/config/env";
 
-// Get all events for admin (published & unpublished)
 export const getEventService = async ({
   search = "",
   limit = 10,
@@ -34,7 +33,6 @@ export const getEventService = async ({
   }
 };
 
-// Get published events for public pages (landing, explore)
 export const getPublishedEvents = async ({
   search = "",
   limit = 10,
@@ -65,7 +63,6 @@ export const getPublishedEvents = async ({
   }
 };
 
-// Get featured events (random, max 4) - published only
 export const getFeaturedEvents = async (limit: number = 4) => {
   try {
     const { data, error } = await supabase
@@ -89,7 +86,6 @@ export const getFeaturedEvents = async (limit: number = 4) => {
   }
 };
 
-// Get latest events (max 4) - published only
 export const getLatestEvents = async (limit: number = 4) => {
   try {
     const { data, error } = await supabase
@@ -137,7 +133,16 @@ export const getEventDetail = async (id: string) => {
 
 export const createEvent = async (payload: IEvent) => {
   try {
-    const { title, description, category_id, location, start_date, end_date, file, status } = payload;
+    const {
+      title,
+      description,
+      category_id,
+      location,
+      start_date,
+      end_date,
+      file,
+      status,
+    } = payload;
 
     let banner_image = undefined;
     if (file) {
@@ -177,7 +182,18 @@ export const createEvent = async (payload: IEvent) => {
 
 export const updateEvent = async (payload: IEvent) => {
   try {
-    const { id, title, description, category_id, location, start_date, end_date, file, banner_image, status } = payload;
+    const {
+      id,
+      title,
+      description,
+      category_id,
+      location,
+      start_date,
+      end_date,
+      file,
+      banner_image,
+      status,
+    } = payload;
 
     let finalBannerImage = banner_image;
 
@@ -232,7 +248,6 @@ export const deleteEvent = async (id: string, bannerImage?: string) => {
         .remove([oldPath]);
     }
 
-    // Delete related tickets first
     await supabase.from("ticket").delete().eq("event_id", id);
 
     const { error } = await supabase.from("event").delete().eq("id", id);

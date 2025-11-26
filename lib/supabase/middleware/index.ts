@@ -40,7 +40,7 @@ export async function updateSession(request: NextRequest) {
     if (
       pathname.startsWith("/admin") ||
       pathname.startsWith("/employe") ||
-      pathname.startsWith("/transaction")
+      pathname.startsWith("/customer")
     ) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/login";
@@ -75,7 +75,7 @@ export async function updateSession(request: NextRequest) {
       url.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(url);
     }
-  } else if (pathname.startsWith("/transaction")) {
+  } else if (pathname.startsWith("/customer")) {
     if (role !== "customer") {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/login";

@@ -5,6 +5,9 @@ import {
   AdminDashboardStats,
   CustomerDashboardStats,
   StaffDashboardStats,
+  AdminRecentTransaction,
+  StaffRecentTransaction,
+  CustomerRecentTransaction,
   getAdminDashboardStats,
   getAdminRecentTransactions,
   getCustomerDashboardStats,
@@ -16,7 +19,9 @@ import { useAuthContext } from "@/hooks/auth-context";
 
 export const useAdminDashboard = () => {
   const [stats, setStats] = useState<AdminDashboardStats | null>(null);
-  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
+  const [recentTransactions, setRecentTransactions] = useState<
+    AdminRecentTransaction[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -38,16 +43,16 @@ export const useAdminDashboard = () => {
 
 export const useStaffDashboard = () => {
   const [stats, setStats] = useState<StaffDashboardStats | null>(null);
-  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
+  const [recentTransactions, setRecentTransactions] = useState<
+    StaffRecentTransaction[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const {user} = useAuthContext();
 
   useEffect(() => {
     const fetchData = async () => {
       const [statsRes, txRes] = await Promise.all([
         getStaffDashboardStats(),
-         getCustomerRecentTransactions(user.id),
+        getStaffRecentTransactions(),
       ]);
       setStats(statsRes);
       setRecentTransactions(txRes);
@@ -63,7 +68,9 @@ export const useStaffDashboard = () => {
 export const useCustomerDashboard = () => {
   const { user } = useAuthContext();
   const [stats, setStats] = useState<CustomerDashboardStats | null>(null);
-  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
+  const [recentTransactions, setRecentTransactions] = useState<
+    CustomerRecentTransaction[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -21,6 +21,49 @@ export type CustomerDashboardStats = {
   pendingPayments: number;
 };
 
+export type AdminRecentTransaction = {
+  id: string;
+  order_code: string;
+  total_price: number;
+  payment_status: string;
+  created_at: string;
+  customer_name?: string | null;
+  event: {
+    title: string;
+  } | null;
+  users: {
+    name: string;
+  } | null;
+};
+
+export type StaffRecentTransaction = AdminRecentTransaction;
+
+export type CustomerRecentTransaction = {
+  id: string;
+  order_code: string;
+  total_price: number;
+  payment_status: string;
+  created_at: string;
+  event: {
+    title: string;
+  } | null;
+  ticket: {
+    ticket_name: string;
+  } | null;
+};
+
+type TicketSoldRow = {
+  sold: number | null;
+};
+
+type TransactionTotalRow = {
+  total_price: number | null;
+};
+
+type TransactionQuantityRow = {
+  quantity: number | null;
+};
+
 export const getAdminDashboardStats = async (): Promise<AdminDashboardStats> => {
   const { count: eventsCount } = await supabase
     .from("event")
@@ -31,10 +74,8 @@ export const getAdminDashboardStats = async (): Promise<AdminDashboardStats> => 
     .select("id", { count: "exact", head: true });
 
   const { data: tickets } = await supabase.from("ticket").select("sold");
-  const ticketsSold = (tickets || []).reduce(
-    (sum, t: any) => sum + (t.sold || 0),
-    0
-  );
+  const ticketRows = (tickets ?? []) as TicketSoldRow[];
+  const ticketsSold = ticketRows.reduce((sum, t) => sum + (t.sold ?? 0), 0);
 
   const { count: usersCount } = await supabase
     .from("users")
@@ -49,8 +90,9 @@ export const getAdminDashboardStats = async (): Promise<AdminDashboardStats> => 
     .select("total_price")
     .eq("payment_status", "completed");
 
-  const revenue = (completedTx || []).reduce(
-    (sum, tx: any) => sum + (tx.total_price || 0),
+  const completedRows = (completedTx ?? []) as unknown as TransactionTotalRow[];
+  const revenue = completedRows.reduce(
+    (sum, tx) => sum + (tx.total_price ?? 0),
     0
   );
 
@@ -64,24 +106,24 @@ export const getAdminDashboardStats = async (): Promise<AdminDashboardStats> => 
   };
 };
 
-export const getAdminRecentTransactions = async () => {
+export const getAdminRecentTransactions = async (): Promise<
+  AdminRecentTransaction[]
+> => {
   const { data } = await supabase
     .from("transaction")
     .select(
-      "id, order_code, total_price, payment_status, created_at, event(title), users(name)"
+      "id, order_code, total_price, payment_status, created_at, customer_name, event(title), users(name)"
     )
     .order("created_at", { ascending: false })
     .limit(5);
 
-  return data || [];
+  return (data ?? []) as unknown as AdminRecentTransaction[];
 };
 
 export const getStaffDashboardStats = async (): Promise<StaffDashboardStats> => {
   const { data: tickets } = await supabase.from("ticket").select("sold");
-  const ticketsSold = (tickets || []).reduce(
-    (sum, t: any) => sum + (t.sold || 0),
-    0
-  );
+  const ticketRows = (tickets ?? []) as TicketSoldRow[];
+  const ticketsSold = ticketRows.reduce((sum, t) => sum + (t.sold ?? 0), 0);
 
   const { count: pendingCount } = await supabase
     .from("transaction")
@@ -100,16 +142,18 @@ export const getStaffDashboardStats = async (): Promise<StaffDashboardStats> => 
   };
 };
 
-export const getStaffRecentTransactions = async () => {
+export const getStaffRecentTransactions = async (): Promise<
+  StaffRecentTransaction[]
+> => {
   const { data } = await supabase
     .from("transaction")
     .select(
-      "id, order_code, total_price, payment_status, created_at, event(title), users(name)"
+      "id, order_code, total_price, payment_status, created_at, customer_name, event(title), users(name)"
     )
     .order("created_at", { ascending: false })
     .limit(5);
 
-  return data || [];
+  return (data ?? []) as unknown as StaffRecentTransaction[];
 };
 
 export const getCustomerDashboardStats = async (
@@ -129,8 +173,9 @@ export const getCustomerDashboardStats = async (
     .eq("user_id", userId)
     .eq("payment_status", "completed");
 
-  const ticketsOwned = (completedTx || []).reduce(
-    (sum, tx: any) => sum + (tx.quantity || 0),
+  const completedRows = (completedTx ?? []) as unknown as TransactionQuantityRow[];
+  const ticketsOwned = completedRows.reduce(
+    (sum, tx) => sum + (tx.quantity ?? 0),
     0
   );
 
@@ -147,7 +192,9 @@ export const getCustomerDashboardStats = async (
   };
 };
 
-export const getCustomerRecentTransactions = async (userId: string) => {
+export const getCustomerRecentTransactions = async (
+  userId: string
+): Promise<CustomerRecentTransaction[]> => {
   const { data } = await supabase
     .from("transaction")
     .select(
@@ -157,5 +204,5 @@ export const getCustomerRecentTransactions = async (userId: string) => {
     .order("created_at", { ascending: false })
     .limit(5);
 
-  return data || [];
+  return (data ?? []) as unknown as CustomerRecentTransaction[];
 };
