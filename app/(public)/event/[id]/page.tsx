@@ -173,7 +173,6 @@ export default function EventDetailPage() {
               fill
               className="!relative"
             />
-            <div className="absolute inset-0 bg-black/30" />
           </motion.div>
 
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 mb-6">
