@@ -24,7 +24,15 @@ const DashboardLayoutSidebar = ({
   const pathname = usePathname();
 
   // const isActive = (href: string) => pathname === href;
-  const isActive = (href: string) => pathname.startsWith(href);
+  const isActive = (href: string) => {
+    const isRoot = href.split("/").length === 2;
+
+    if (isRoot) {
+      return pathname === href;
+    }
+
+    return pathname === href || pathname.startsWith(href + "/");
+  };
 
   return (
     <div
