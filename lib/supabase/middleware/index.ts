@@ -69,6 +69,13 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
     // if (pathname === "/admin") redirectUrl = "/admin/dashboard";
+  } else if (pathname.startsWith("/staff")) {
+    if (role !== "staff") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/login";
+      url.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(url);
+    }
   } else if (pathname.startsWith("/employe")) {
     if (role !== "employe") {
       const url = request.nextUrl.clone();
