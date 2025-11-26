@@ -86,11 +86,25 @@ export const useAuth = () => {
       const user = await GetUserService();
       const role = user.data?.profile.role;
 
-      if (callbackUrl) {
-        window.location.href = callbackUrl;
-        return;
-      }
+      // if (callbackUrl) {
+      //   window.location.href = callbackUrl;
+      //   return;
+      // }
 
+      if (callbackUrl) {
+        const url = new URL(callbackUrl);
+
+        const path = url.pathname;
+
+        if (path.startsWith("/admin") && role !== "admin") {
+          toast.error("Anda tidak memiliki akses ke halaman ini");
+        } else if (path.startsWith("/staff") && role !== "staff") {
+          toast.error("Anda tidak memiliki akses ke halaman ini");
+        } else {
+          window.location.href = callbackUrl;
+          return;
+        }
+      }
       await getProfile();
 
       switch (role) {
