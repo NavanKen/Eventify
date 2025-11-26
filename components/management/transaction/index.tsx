@@ -1,11 +1,14 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, Printer } from "lucide-react";
 import DataTable from "./table";
 import { Input } from "@/components/ui/input";
 import CreateDialog from "./dialog/create-dialog";
 import { useState } from "react";
 import { useTransaction } from "@/hooks/use-transaction";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useAuthContext } from "@/hooks/auth-context";
 
 const TransactionComponent = () => {
   const [search, setSearch] = useState("");
@@ -22,6 +25,9 @@ const TransactionComponent = () => {
     handleOpenChange,
     handleDelete,
   } = useTransaction(search, limit, page);
+
+  const { user } = useAuthContext();
+  const isAdmin = user?.role === "admin";
 
   return (
     <>
@@ -41,6 +47,17 @@ const TransactionComponent = () => {
               }}
             />
           </div>
+          {isAdmin && (
+            <Link href="/transaction/report">
+              <Button
+                variant="outline"
+                className="py-5 px-4 flex items-center gap-2 text-sm"
+              >
+                <Printer className="w-4 h-4" />
+                Cetak Laporan
+              </Button>
+            </Link>
+          )}
           <CreateDialog
             open={createOpen}
             onOpenChange={handleOpenChange}
