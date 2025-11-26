@@ -168,7 +168,7 @@ export default function EventDetailPage() {
             transition={{ duration: 0.5 }}
           >
             <Image
-              src={event.banner_image || "/image/placeholder.png"}
+              src={event.banner_image!}
               alt={event.title}
               fill
               className="!relative"

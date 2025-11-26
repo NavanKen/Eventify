@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2, Calendar, MapPin, Ticket } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CheckoutSuccessPage = () => {
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4 py-10">
       <div className="max-w-xl w-full bg-white rounded-[var(--radius)] shadow-sm border border-border p-8 space-y-6">
@@ -23,16 +22,16 @@ const CheckoutSuccessPage = () => {
             </p>
           </div>
         </div>
-          <div className="flex flex-col sm:flex-row gap-3 mt-2">
-            <Button asChild className="flex-1">
-              <Link href="/customer/transaction">View My Tickets</Link>
-            </Button>
-            <Button asChild variant="outline" className="flex-1">
-              <Link href="/customer">Go to Dashboard</Link>
-            </Button>
-          </div>
+        <div className="flex flex-col sm:flex-row gap-3 mt-2">
+          <Button asChild className="flex-1">
+            <Link href="/customer/transaction">View My Tickets</Link>
+          </Button>
+          <Button asChild variant="outline" className="flex-1">
+            <Link href="/customer">Go to Dashboard</Link>
+          </Button>
         </div>
       </div>
+    </div>
   );
 };
 

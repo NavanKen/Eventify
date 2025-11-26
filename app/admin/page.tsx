@@ -3,7 +3,21 @@
 import { useAdminDashboard } from "@/hooks/use-dashboard";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Calendar, FolderOpen, Ticket, Users, CreditCard, Wallet, TrendingUp, ArrowRight, Zap } from "lucide-react";
+import {
+  Calendar,
+  FolderOpen,
+  Ticket,
+  Users,
+  CreditCard,
+  TrendingUp,
+  ArrowRight,
+  Zap,
+  Wallet,
+  List,
+  Tag,
+  Bookmark,
+  User,
+} from "lucide-react";
 
 const AdminPages = () => {
   const { stats, recentTransactions, isLoading } = useAdminDashboard();
@@ -48,10 +62,10 @@ const AdminPages = () => {
   ];
 
   const quickActions = [
-    { label: "Kelola Event", href: "/admin/event", icon: Calendar },
-    { label: "Kelola Kategori", href: "/admin/category", icon: FolderOpen },
-    { label: "Kelola Banner", href: "/admin/banner", icon: Zap },
-    { label: "Kelola Pengguna", href: "/admin/users", icon: Users },
+    { label: "Kelola Event", href: "/admin/event", icon: List },
+    { label: "Kelola Kategori", href: "/admin/category", icon: Tag },
+    { label: "Kelola Banner", href: "/admin/banner", icon: Bookmark },
+    { label: "Kelola Pengguna", href: "/admin/users", icon: User },
   ];
 
   const getStatusBadge = (status: string) => {
@@ -61,11 +75,13 @@ const AdminPages = () => {
       failed: { bg: "bg-red-100", text: "text-red-700" },
       expired: { bg: "bg-gray-100", text: "text-gray-700" },
     };
-    
+
     const style = statusMap[status.toLowerCase()] || statusMap.pending;
-    
+
     return (
-      <span className={`${style.bg} ${style.text} px-2.5 py-1 rounded-full text-xs font-medium`}>
+      <span
+        className={`${style.bg} ${style.text} px-2.5 py-1 rounded-full text-xs font-medium`}
+      >
         {status}
       </span>
     );
@@ -73,7 +89,6 @@ const AdminPages = () => {
 
   return (
     <div className="space-y-8 pb-8">
-
       <div className="flex flex-col gap-4">
         <div>
           <h1 className="text-3xl font-bold text-[var(--text-dark)] mb-1">
@@ -95,7 +110,9 @@ const AdminPages = () => {
               className="bg-white rounded-[var(--radius)] border border-border/50 p-6 hover:shadow-md transition-all duration-300 cursor-pointer group"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className={`${item.color} p-3 bg-gray-50 rounded-xl group-hover:scale-110 transition-transform duration-300`}>
+                <div
+                  className={`${item.color} p-3 bg-gray-50 rounded-xl group-hover:scale-110 transition-transform duration-300`}
+                >
                   <Icon className="w-5 h-5" />
                 </div>
                 <div className="text-right">
@@ -156,20 +173,23 @@ const AdminPages = () => {
                 {recentTransactions.length} transaksi terbaru
               </p>
             </div>
-            <Button 
-              asChild 
-              size="sm" 
-              variant="outline" 
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
               className="border-[var(--primary)]/30 text-[var(--primary)] hover:bg-[var(--primary)]/5 hover:text-[var(--primary)]"
             >
-              <Link href="/admin/transaction" className="flex items-center gap-2">
+              <Link
+                href="/admin/transaction"
+                className="flex items-center gap-2"
+              >
                 Lihat Semua
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </Button>
           </div>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50/50">
@@ -187,7 +207,9 @@ const AdminPages = () => {
                   <td colSpan={5} className="py-12 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-8 h-8 border-3 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
-                      <p className="text-sm text-[var(--text-light)]">Memuat data...</p>
+                      <p className="text-sm text-[var(--text-light)]">
+                        Memuat data...
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -211,8 +233,8 @@ const AdminPages = () => {
                 </tr>
               ) : (
                 recentTransactions.map((tx) => (
-                  <tr 
-                    key={tx.id} 
+                  <tr
+                    key={tx.id}
                     className="hover:bg-gray-50/50 transition-colors group"
                   >
                     <td className="py-4 px-6">
