@@ -55,6 +55,27 @@ export const InfoTab = ({ event, onUpdate }: InfoTabProps) => {
   const onSubmit = async (data: IEvent) => {
     setIsLoading(true);
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (!startDate || !endDate) {
+      toast.error("Tanggal mulai dan selesai wajib diisi");
+      setIsLoading(false);
+      return;
+    }
+
+    if (startDate < today) {
+      toast.error("Tanggal mulai tidak boleh di masa lalu");
+      setIsLoading(false);
+      return;
+    }
+
+    if (endDate < startDate) {
+      toast.error("Tanggal selesai tidak boleh sebelum tanggal mulai");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from("event")

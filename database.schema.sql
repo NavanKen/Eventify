@@ -101,3 +101,13 @@ LEFT JOIN event e ON e.id = t.event_id
 LEFT JOIN ticket tk ON tk.id = t.ticket_id
 LEFT JOIN users u ON u.id = t.user_id;
 
+create view event_popularity as
+select
+  e.*,
+  c.name as category_name,
+  coalesce(sum(t.sold), 0) as total_sold
+from event e
+left join category c on c.id = e.category_id
+left join ticket t on t.event_id = e.id
+where e.status = 'published'
+group by e.id, c.name;

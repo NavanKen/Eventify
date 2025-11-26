@@ -71,6 +71,12 @@ export const getFeaturedEvents = async (limit: number = 4) => {
       .eq("status", "published")
       .limit(limit * 2);
 
+    // const { data, error } = await supabase
+    //   .from("event_popularity")
+    //   .select("*")
+    //   .order("total_sold", { ascending: false })
+    //   .limit(limit);
+
     if (error) {
       return { status: false, error };
     }
