@@ -64,11 +64,19 @@ export const useUser = (search?: string, limit?: number, page?: number) => {
   };
 
   const handleCreate = async (payload: IUserManagement) => {
-    const { name, email, password, phone, file, role } = payload;
+    const { name, email, password, phone, file, role, bio } = payload;
 
     setIsCreate(true);
 
-    const res = await createUser({ name, email, password, phone, file, role });
+    const res = await createUser({
+      name,
+      email,
+      password,
+      phone,
+      file,
+      role,
+      bio,
+    });
 
     if (!res.status) {
       toast.error(res.message);
@@ -93,6 +101,7 @@ export const useUser = (search?: string, limit?: number, page?: number) => {
           phone: userToEdit.phone,
           avatar: userToEdit.avatar,
           role: userToEdit.role,
+          bio: userToEdit.bio,
         });
         setEditPreview(userToEdit.avatar || null);
       }
@@ -131,6 +140,7 @@ export const useUser = (search?: string, limit?: number, page?: number) => {
       file: payload.file,
       avatar: imageToUse || payload.avatar,
       role: payload.role,
+      bio: payload.bio,
     });
 
     if (!res.status) {

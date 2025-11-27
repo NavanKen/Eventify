@@ -36,7 +36,7 @@ export const getUserService = async ({
 
 export const createUser = async (payload: IUserManagement) => {
   try {
-    const { name, email, phone, file, role, password } = payload;
+    const { name, email, phone, file, role, password, bio } = payload;
 
     let avatar = undefined;
     if (file) {
@@ -65,6 +65,7 @@ export const createUser = async (payload: IUserManagement) => {
         email,
         phone,
         avatar,
+        bio,
         role: role ?? "customer",
       });
 
@@ -90,7 +91,7 @@ export const createUser = async (payload: IUserManagement) => {
 
 export const updateUser = async (payload: IUserManagement) => {
   try {
-    const { id, name, email, phone, file, avatar, role } = payload;
+    const { id, name, email, phone, file, avatar, role, bio } = payload;
 
     let finalAvatar = avatar;
 
@@ -119,6 +120,7 @@ export const updateUser = async (payload: IUserManagement) => {
         email,
         phone,
         avatar: finalAvatar,
+        bio,
         role,
       })
       .eq("id", id);

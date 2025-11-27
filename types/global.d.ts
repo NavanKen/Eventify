@@ -65,6 +65,7 @@ export interface IUserManagement {
   avatar?: string;
   file?: File | null;
   password?: string;
+  bio?: string;
   role?: "customer" | "admin" | "staff" | string;
   created_at?: Date;
 }

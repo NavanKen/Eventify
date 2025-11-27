@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 interface IEditDialog {
   user: IUserManagement;
@@ -56,6 +57,7 @@ const EditDialog = ({
         phone: user.phone,
         avatar: user.avatar,
         role: user.role,
+        bio: user.bio,
       });
     }
   }, [open, user, form]);
@@ -131,6 +133,16 @@ const EditDialog = ({
                     <SelectItem value="staff">Staff</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Textarea
+                  {...register("bio")}
+                  id="bio"
+                  name="bio"
+                  placeholder="Bio"
+                  className="resize-none"
+                />
               </div>
               <div className="flex items-center gap-2 pt-2">
                 {preview ? (
