@@ -63,14 +63,14 @@ const CategoriesSection = () => {
           </div>
         </div>
         {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+          <div className="grid auto-cols-[10rem] grid-flow-col gap-4 overflow-x-auto py-2 lg:grid-cols-8 scrollbar-hide">
             {Array.from({ length: 8 }).map((_, i) => (
               <Skeleton key={i} className="w-full h-32 rounded-lg" />
             ))}
           </div>
         ) : (
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4"
+            className="grid auto-cols-[10rem] grid-flow-col gap-4 overflow-x-auto py-2 lg:grid-cols-8 scrollbar-hide"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -78,7 +78,7 @@ const CategoriesSection = () => {
             {categories.map((category) => (
               <motion.div key={category.id} variants={itemVariants}>
                 <Link href={`/explore?category=${category.id}`}>
-                  <div className="flex flex-col items-center gap-3 p-4 rounded-lg hover:bg-gray-100 border transition-colors cursor-pointer h-full">
+                  <div className="flex flex-col items-center gap-3 p-4 rounded-lg border transition-colors cursor-pointer h-full">
                     {category.image ? (
                       <div className="relative w-16 h-16 md:w-20 md:h-20">
                         <Image
